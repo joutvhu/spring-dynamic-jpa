@@ -8,10 +8,16 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
 }
 
-group = 'com.joutvhu'
-version = '1.0.0-SNAPSHOT'
+group = 'com.github.joutvhu'
+version = '1.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
 
 repositories {
     mavenLocal()
@@ -22,6 +28,7 @@ dependencies {
     compile 'org.springframework:spring-aspects'
     compile 'org.springframework:spring-context'
     compile 'org.springframework:spring-context-support'
+
     compile 'org.springframework.data:spring-data-jpa'
     compile 'org.springframework.data:spring-data-commons'
     compile 'jakarta.transaction:jakarta.transaction-api'
@@ -32,8 +39,13 @@ dependencies {
         exclude group: 'javax.xml.bind', module: 'jaxb-api'
         exclude group: 'org.jboss.spec.javax.transaction', module: 'jboss-transaction-api_1.2_spec'
     }
+
+    annotationProcessor "org.projectlombok:lombok"
+    compile 'org.projectlombok:lombok'
+
     compile 'org.freemarker:freemarker:2.3.30'
     compile 'org.apache.commons:commons-lang3:3.11'
+    compile 'org.apache.logging.log4j:log4j-api:2.13.3'
 
     testCompile 'org.springframework.boot:spring-boot-starter-test'
     testCompile 'junit:junit'
@@ -62,8 +74,8 @@ test {
 publishing {
     publications {
         maven(MavenPublication) {
-            groupId = 'com.joutvhu'
-            artifactId = 'spring-dynamic-jpa'
+            groupId = group
+            artifactId = project.rootProject.name
             artifact sourcesJar
             version = version
 
@@ -102,16 +114,23 @@ publishing {
     }
     repositories {
         maven {
-            credentials {
-                username project.publishUsername
-                password project.publishPassword
-            }
-            if (version.endsWith("-SNAPSHOT")) {
-                url project.repositorySnapshot
-            } else if(version.endsWith("-RELEASE")) {
-                url project.repositoryRelease
+            name = 'sonatype'
+            if (version.endsWith('-SNAPSHOT')) {
+                url = 'https://oss.sonatype.org/content/repositories/snapshots'
             } else {
-                url project.repositoryPublic
+                url = 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
+            }
+            credentials {
+                username = project.ossrhUsername
+                password = project.ossrhPassword
+            }
+        }
+        maven {
+            name = 'github'
+            url = "https://maven.pkg.github.com/joutvhu/spring-dynamic-jpa"
+            credentials {
+                username = project.githubUsername
+                password = project.githubPassword
             }
         }
     }

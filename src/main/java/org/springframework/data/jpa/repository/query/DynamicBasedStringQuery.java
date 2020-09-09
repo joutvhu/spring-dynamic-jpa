@@ -2,6 +2,12 @@ package org.springframework.data.jpa.repository.query;
 
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 
+/**
+ * Extension of {@link StringQuery} that evaluates the given query string as a SpEL template-expression.
+ *
+ * @author Giao Ho
+ * @see 1.0.0
+ */
 public class DynamicBasedStringQuery extends ExpressionBasedStringQuery {
     /**
      * Creates a new {@link DynamicBasedStringQuery} for the given query and {@link org.springframework.data.repository.core.EntityMetadata}.

@@ -4,6 +4,8 @@ import com.joutvhu.dynamic.jpa.util.DynamicTemplateResolver;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import lombok.NoArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ResourceLoaderAware;
@@ -12,7 +14,6 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import java.io.IOException;
-import java.util.Iterator;
 
 /**
  * DynamicQueryTemplates
@@ -20,6 +21,8 @@ import java.util.Iterator;
  * @author Giao Ho
  * @see 1.0.0
  */
+@Log4j2
+@NoArgsConstructor
 public class DynamicQueryTemplates implements ResourceLoaderAware, InitializingBean {
     private static Configuration cfg = new Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
     private static StringTemplateLoader sqlTemplateLoader = new StringTemplateLoader();
@@ -28,15 +31,10 @@ public class DynamicQueryTemplates implements ResourceLoaderAware, InitializingB
         cfg.setTemplateLoader(sqlTemplateLoader);
     }
 
-    private DynamicTemplateResolver templateResolver = new DynamicTemplateResolver();
-
     private String encoding = "UTF-8";
     private String templateLocation = "classpath:/query";
     private String suffix = ".dsql";
     private ResourceLoader resourceLoader;
-
-    public DynamicQueryTemplates() {
-    }
 
     public Template findTemplate(String name) {
         try {
@@ -44,11 +42,6 @@ public class DynamicQueryTemplates implements ResourceLoaderAware, InitializingB
         } catch (IOException e) {
             return null;
         }
-    }
-
-    public DynamicTemplateResolver getTemplateResolver() {
-        templateResolver.setEncoding(encoding);
-        return templateResolver;
     }
 
     public void setEncoding(String encoding) {
@@ -80,15 +73,12 @@ public class DynamicQueryTemplates implements ResourceLoaderAware, InitializingB
         Resource[] resources = resourcePatternResolver.getResources(pattern);
 
         for (Resource resource : resources) {
-            Iterator<Void> iterator = getTemplateResolver().doInTemplateResource(resource, (templateName, content) -> {
+            DynamicTemplateResolver.of(resource).encoding(encoding).load((templateName, content) -> {
                 Object src = sqlTemplateLoader.findTemplateSource(templateName);
-//                if (src != null)
-//                    logger.warn("found duplicate template key, will replace the value, key:" + templateName);
+                if (src != null)
+                    log.warn("Found duplicate template key, will replace the value, key: " + templateName);
                 sqlTemplateLoader.putTemplate(templateName, content);
             });
-            while (iterator.hasNext()) {
-                iterator.next();
-            }
         }
     }
 }

@@ -2,7 +2,7 @@ package com.joutvhu.dynamic.jpa.query;
 
 import com.joutvhu.dynamic.jpa.DynamicQuery;
 import com.joutvhu.dynamic.jpa.DynamicQueryTemplates;
-import com.joutvhu.dynamic.jpa.support.ContextHolder;
+import com.joutvhu.dynamic.jpa.util.ApplicationContextHolder;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.springframework.core.annotation.AnnotatedElementUtils;
@@ -11,7 +11,6 @@ import org.springframework.data.jpa.provider.QueryExtractor;
 import org.springframework.data.jpa.repository.query.JpaQueryMethod;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.repository.core.RepositoryMetadata;
-import org.springframework.data.repository.query.QueryMethod;
 import org.springframework.data.util.Lazy;
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
@@ -61,7 +60,7 @@ public class DynamicJpaQueryMethod extends JpaQueryMethod {
     }
 
     protected Template findTemplate(String name) {
-        DynamicQueryTemplates queryTemplates = ContextHolder.getBean(DynamicQueryTemplates.class);
+        DynamicQueryTemplates queryTemplates = ApplicationContextHolder.getBean(DynamicQueryTemplates.class);
         return queryTemplates != null ? queryTemplates.findTemplate(name) : null;
     }
 
