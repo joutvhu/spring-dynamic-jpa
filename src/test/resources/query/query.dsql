@@ -1,0 +1,29 @@
+--TableB:findB1
+select t from TableB t
+<#if fieldE?has_content && fieldE?starts_with("H")>
+  where t.fieldE = :fieldE
+</#if>
+
+--TableB:findB2
+select t from TableB t
+<#if maxD??>
+  where t.fieldD < :maxD
+</#if>
+
+--TableB:findB3
+select t from TableB t
+<#if maxD??>
+  where t.fieldD < :maxD
+</#if>
+
+--TableB:findB3.count
+select count(t) from TableB t
+<#if maxD??>
+  where t.fieldD < :maxD
+</#if>
+
+--TableB:sumB1
+select sum(FIELD_D) from TABLE_B
+<#if maxD??>
+  where FIELD_D < :maxD
+</#if>

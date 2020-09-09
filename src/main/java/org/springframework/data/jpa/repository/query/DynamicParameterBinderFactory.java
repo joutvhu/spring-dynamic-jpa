@@ -1,0 +1,12 @@
+package org.springframework.data.jpa.repository.query;
+
+import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+
+public class DynamicParameterBinderFactory extends ParameterBinderFactory {
+    public static ParameterBinder createQueryAwareBinder(
+            JpaParameters parameters, DeclaredQuery query, SpelExpressionParser parser,
+            QueryMethodEvaluationContextProvider evaluationContextProvider) {
+        return ParameterBinderFactory.createQueryAwareBinder(parameters, query, parser, evaluationContextProvider);
+    }
+}
