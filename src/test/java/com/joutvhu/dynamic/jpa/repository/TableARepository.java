@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface TableARepository extends JpaRepository<TableA, String> {
+public interface TableARepository extends JpaRepository<TableA, Long> {
     @DynamicQuery(value = "select t from TableA t where t.fieldB = :fieldB\n" +
             "<#if fieldC?has_content>\n" +
             "  and t.fieldC = :fieldC\n" +
