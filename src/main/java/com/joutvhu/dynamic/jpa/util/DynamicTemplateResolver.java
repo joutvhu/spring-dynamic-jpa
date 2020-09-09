@@ -6,17 +6,26 @@ import org.springframework.core.io.Resource;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
- * Dynamic template resolver
+ * Read and parse template query files into query templates
  *
  * @author Giao Ho
- * @see 1.0.0
+ * @since 1.0.0
  */
 public class DynamicTemplateResolver {
+    private final Resource resource;
+    private List<String> lines;
     private String encoding = "UTF-8";
+
+    public DynamicTemplateResolver(Resource resource) {
+        this.resource = resource;
+    }
+
+    public static DynamicTemplateResolver of(Resource resource) {
+        return new DynamicTemplateResolver(resource);
+    }
 
     public static BufferedReader toBufferedReader(Reader reader) {
         return reader instanceof BufferedReader ? (BufferedReader) reader : new BufferedReader(reader);
@@ -25,7 +34,7 @@ public class DynamicTemplateResolver {
     public static List<String> readLines(InputStream input, String encoding) throws IOException {
         BufferedReader reader = toBufferedReader(new InputStreamReader(input,
                 encoding == null ? Charset.defaultCharset() : Charset.forName(encoding)));
-        List<String> list = new ArrayList();
+        List<String> list = new ArrayList<>();
 
         for (String line = reader.readLine(); line != null; line = reader.readLine()) {
             list.add(line);
@@ -34,63 +43,46 @@ public class DynamicTemplateResolver {
         return list;
     }
 
-    public void setEncoding(String encoding) {
+    public DynamicTemplateResolver encoding(String encoding) {
         this.encoding = encoding;
+        return this;
     }
 
-    public Iterator<Void> doInTemplateResource(Resource resource, final NamedTemplateCallback callback) throws Exception {
+    private boolean isNameLine(String line) {
+        return StringUtils.startsWith(line, "--");
+    }
+
+    private boolean isNameLine(int index) {
+        return isNameLine(lines.get(index));
+    }
+
+    public void load(NamedTemplateCallback callback) throws Exception {
         InputStream inputStream = resource.getInputStream();
-        final List<String> lines = readLines(inputStream, encoding);
-        return new Iterator<Void>() {
-            String name;
-            StringBuilder content = new StringBuilder();
-            int index = 0;
-            int total = lines.size();
+        lines = DynamicTemplateResolver.readLines(inputStream, encoding);
 
-            @Override
-            public boolean hasNext() {
-                return index < total;
-            }
+        int index = 0;
+        String name = null;
+        int total = lines.size();
+        StringBuilder content = new StringBuilder();
 
-            @Override
-            public Void next() {
-                do {
-                    String line = lines.get(index);
-                    if (isNameLine(line)) {
-                        name = StringUtils.trim(StringUtils.remove(line, "--"));
-                    } else {
-                        line = StringUtils.trimToNull(line);
-                        if (line != null) {
-                            content.append(line).append(" ");
-                        }
-                    }
-                    index++;
-                } while (!isLastLine() && !isNextNameLine());
-
-                //next template
-                callback.process(name, content.toString());
-                name = null;
-                content = new StringBuilder();
-                return null;
-            }
-
-            @Override
-            public void remove() {
-                //ignore
-            }
-
-            private boolean isNameLine(String line) {
-                return StringUtils.contains(line, "--");
-            }
-
-            private boolean isNextNameLine() {
+        while (index < total) {
+            do {
                 String line = lines.get(index);
-                return isNameLine(line);
-            }
+                if (isNameLine(line))
+                    name = StringUtils.trim(StringUtils.substring(line, 2));
+                else {
+                    line = StringUtils.trimToNull(line);
+                    if (line != null)
+                        content.append(line).append(" ");
+                }
+                index++;
+            } while (index < total && !isNameLine(index));
 
-            private boolean isLastLine() {
-                return index == total;
-            }
-        };
+            // Next template
+            if (name != null)
+                callback.process(name, content.toString());
+            name = null;
+            content = new StringBuilder();
+        }
     }
 }

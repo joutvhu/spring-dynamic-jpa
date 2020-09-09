@@ -1,5 +1,6 @@
 package com.joutvhu.dynamic.jpa.support;
 
+import com.joutvhu.dynamic.jpa.util.ApplicationContextHolder;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ import javax.persistence.EntityManager;
  * repository factories via Spring configuration.
  *
  * @author Giao Ho
- * @see 1.0.0
+ * @since 1.0.0
  */
 public class DynamicJpaRepositoryFactoryBean<T extends Repository<S, ID>, S, ID> extends JpaRepositoryFactoryBean<T, S, ID>
         implements ApplicationContextAware {
@@ -44,9 +45,8 @@ public class DynamicJpaRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
         jpaRepositoryFactory.setEntityPathResolver(entityPathResolver);
         jpaRepositoryFactory.setEscapeCharacter(escapeCharacter);
 
-        if (queryMethodFactory != null) {
+        if (queryMethodFactory != null)
             jpaRepositoryFactory.setQueryMethodFactory(queryMethodFactory);
-        }
 
         return jpaRepositoryFactory;
     }
@@ -72,6 +72,6 @@ public class DynamicJpaRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        ContextHolder.appContext = applicationContext;
+        ApplicationContextHolder.appContext = applicationContext;
     }
 }

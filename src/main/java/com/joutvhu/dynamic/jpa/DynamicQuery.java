@@ -8,7 +8,7 @@ import java.lang.annotation.*;
  * Annotation to declare finder dynamic queries directly on repository methods.
  *
  * @author Giao Ho
- * @see 1.0.0
+ * @since 1.0.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})
@@ -39,6 +39,8 @@ public @interface DynamicQuery {
 
     /**
      * Configures whether the given query is a native one. Defaults to {@literal false}.
+     *
+     * @return true if the query is native
      */
     boolean nativeQuery() default false;
 }

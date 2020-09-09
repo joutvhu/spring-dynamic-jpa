@@ -15,7 +15,7 @@ import java.util.Optional;
  * JPA specific generic repository factory.
  *
  * @author Giao Ho
- * @see 1.0.0
+ * @since 1.0.0
  */
 public class DynamicJpaRepositoryFactory extends JpaRepositoryFactory {
     private final EntityManager entityManager;

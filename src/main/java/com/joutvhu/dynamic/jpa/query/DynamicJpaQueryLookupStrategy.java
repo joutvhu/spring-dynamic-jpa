@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
  * {@link QueryLookupStrategy} that tries to detect a dynamic query declared via {@link DynamicQuery} annotation.
  *
  * @author Giao Ho
- * @see 1.0.0
+ * @since 1.0.0
  */
 public class DynamicJpaQueryLookupStrategy implements QueryLookupStrategy {
     private final EntityManager entityManager;
