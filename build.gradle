@@ -2,17 +2,19 @@ plugins {
     id 'java'
     id 'idea'
     id 'groovy'
+    id 'signing'
     id 'maven-publish'
     id 'org.springframework.boot' version '2.3.3.RELEASE'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
 }
 
 group = 'com.joutvhu'
-version = '1.0.0'
+version = '1.0.0-SNAPSHOT'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
@@ -49,6 +51,10 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
 test {
     useJUnitPlatform()
 }
@@ -59,7 +65,7 @@ publishing {
             groupId = 'com.joutvhu'
             artifactId = 'spring-dynamic-jpa'
             artifact sourcesJar
-            version = '1.0.0'
+            version = version
 
             pom {
                 name = 'spring-dynamic-jpa'
@@ -94,4 +100,23 @@ publishing {
             }
         }
     }
+    repositories {
+        maven {
+            credentials {
+                username project.publishUsername
+                password project.publishPassword
+            }
+            if (version.endsWith("-SNAPSHOT")) {
+                url project.repositorySnapshot
+            } else if(version.endsWith("-RELEASE")) {
+                url project.repositoryRelease
+            } else {
+                url project.repositoryPublic
+            }
+        }
+    }
+}
+
+signing {
+    sign configurations.archives
 }

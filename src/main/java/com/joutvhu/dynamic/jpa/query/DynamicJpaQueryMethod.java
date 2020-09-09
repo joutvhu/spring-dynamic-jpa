@@ -11,6 +11,7 @@ import org.springframework.data.jpa.provider.QueryExtractor;
 import org.springframework.data.jpa.repository.query.JpaQueryMethod;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.repository.core.RepositoryMetadata;
+import org.springframework.data.repository.query.QueryMethod;
 import org.springframework.data.util.Lazy;
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
@@ -21,6 +22,12 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * JPA specific extension of {@link JpaQueryMethod}.
+ *
+ * @author Giao Ho
+ * @see 1.0.0
+ */
 public class DynamicJpaQueryMethod extends JpaQueryMethod {
     private static final Map<String, String> templateMap = new HashMap<>();
     private static Configuration cfg = new Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);

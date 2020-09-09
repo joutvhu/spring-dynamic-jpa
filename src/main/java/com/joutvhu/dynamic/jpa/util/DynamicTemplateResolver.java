@@ -9,6 +9,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Dynamic template resolver
+ *
+ * @author Giao Ho
+ * @see 1.0.0
+ */
 public class DynamicTemplateResolver {
     private String encoding = "UTF-8";
 

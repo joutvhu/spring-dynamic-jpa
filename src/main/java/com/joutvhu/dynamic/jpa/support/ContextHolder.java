@@ -4,6 +4,12 @@ import org.springframework.context.ApplicationContext;
 
 import java.util.Collection;
 
+/**
+ * Context holder
+ *
+ * @author Giao Ho
+ * @see 1.0.0
+ */
 public class ContextHolder {
     public static ApplicationContext appContext;
 

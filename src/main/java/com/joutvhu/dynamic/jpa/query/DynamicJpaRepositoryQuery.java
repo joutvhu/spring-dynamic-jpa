@@ -1,12 +1,10 @@
 package com.joutvhu.dynamic.jpa.query;
 
+import com.joutvhu.dynamic.jpa.DynamicQuery;
 import freemarker.template.Template;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.repository.query.*;
-import org.springframework.data.repository.query.Parameters;
-import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
-import org.springframework.data.repository.query.ResultProcessor;
-import org.springframework.data.repository.query.ReturnedType;
+import org.springframework.data.repository.query.*;
 import org.springframework.data.util.Lazy;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.lang.Nullable;
@@ -18,6 +16,13 @@ import javax.persistence.Tuple;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * {@link RepositoryQuery} implementation that inspects a {@link DynamicJpaQueryMethod}
+ * for the existence of an {@link DynamicQuery} annotation and creates a JPA {@link DynamicQuery} from it.
+ *
+ * @author Giao Ho
+ * @see 1.0.0
+ */
 public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
     private static final SpelExpressionParser PARSER = new SpelExpressionParser();
     private final DynamicJpaQueryMethod method;
@@ -31,9 +36,6 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
 
     /**
      * Creates a new {@link DynamicJpaRepositoryQuery} from the given {@link AbstractJpaQuery}.
-     *
-     * @param method
-     * @param em
      */
     public DynamicJpaRepositoryQuery(DynamicJpaQueryMethod method, EntityManager em,
                                      QueryMethodEvaluationContextProvider evaluationContextProvider) {

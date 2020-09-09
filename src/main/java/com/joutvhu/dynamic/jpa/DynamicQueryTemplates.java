@@ -14,6 +14,12 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import java.io.IOException;
 import java.util.Iterator;
 
+/**
+ * DynamicQueryTemplates
+ *
+ * @author Giao Ho
+ * @see 1.0.0
+ */
 public class DynamicQueryTemplates implements ResourceLoaderAware, InitializingBean {
     private static Configuration cfg = new Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
     private static StringTemplateLoader sqlTemplateLoader = new StringTemplateLoader();

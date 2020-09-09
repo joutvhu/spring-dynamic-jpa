@@ -89,3 +89,6 @@ nb-configuration.xml
 ## Visual Studio Code ##
 .vscode/
 .code-workspace
+
+# Secrets
+gradle.properties

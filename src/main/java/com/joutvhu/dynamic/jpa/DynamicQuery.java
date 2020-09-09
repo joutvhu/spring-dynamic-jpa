@@ -4,28 +4,36 @@ import org.springframework.data.annotation.QueryAnnotation;
 
 import java.lang.annotation.*;
 
+/**
+ * Annotation to declare finder dynamic queries directly on repository methods.
+ *
+ * @author Giao Ho
+ * @see 1.0.0
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})
 @QueryAnnotation
 @Documented
 public @interface DynamicQuery {
     /**
-     * Defines the JPA query to be executed when the annotated method is called.
+     * Defines the JPA query template to be executed when the annotated method is called.
+     *
+     * @return the JPA query template
      */
     String value() default "";
 
     /**
-     * Defines a special count query that shall be used for pagination queries to lookup the total number of elements for
-     * a page. If none is configured we will derive the count query from the original query or {@link #countProjection()} query if any.
+     * Defines a special count query template that shall be used for pagination queries to lookup the total number
+     * of elements for  a page.
+     *
+     * @return the count query template
      */
     String countQuery() default "";
 
     /**
-     * Defines the projection part of the count query that is generated for pagination. If neither {@link #countQuery()}
-     * nor {@link #countProjection()} is configured we will derive the count query from the original query.
+     * Defines the projection part of the count query template that is generated for pagination.
      *
-     * @return
-     * @since 1.6
+     * @return the count query projection template
      */
     String countProjection() default "";
 
