@@ -9,7 +9,7 @@ plugins {
 }
 
 group = 'com.github.joutvhu'
-version = '1.0.1-SNAPSHOT'
+version = '1.1.0'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -46,6 +46,7 @@ dependencies {
     compile 'org.freemarker:freemarker:2.3.30'
     compile 'org.apache.commons:commons-lang3:3.11'
     compile 'org.apache.logging.log4j:log4j-api:2.13.3'
+    compile 'com.google.code.findbugs:jsr305:3.0.2'
 
     testCompile 'org.springframework.boot:spring-boot-starter-test'
     testCompile 'junit:junit'
@@ -76,12 +77,12 @@ publishing {
         maven(MavenPublication) {
             groupId = group
             artifactId = project.rootProject.name
-            artifact sourcesJar
+            artifacts = [sourcesJar, javadocJar]
             version = version
 
             pom {
-                name = 'spring-dynamic-jpa'
-                description = 'spring-dynamic-jpa'
+                name = project.rootProject.name
+                description = 'Easier to implement dynamic queries with JpaRepository'
                 url = 'https://github.com/joutvhu/spring-dynamic-jpa'
                 licenses {
                     license {
@@ -115,7 +116,7 @@ publishing {
     repositories {
         maven {
             name = 'sonatype'
-            if (version.endsWith('-SNAPSHOT')) {
+            if (version.endsWith('-SNAPSHOT') || version.endsWith('.SNAPSHOT')) {
                 url = 'https://oss.sonatype.org/content/repositories/snapshots'
             } else {
                 url = 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
@@ -137,5 +138,5 @@ publishing {
 }
 
 signing {
-    sign configurations.archives
+    sign publishing.publications.maven
 }

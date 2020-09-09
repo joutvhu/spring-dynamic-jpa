@@ -21,7 +21,7 @@ import java.util.Map;
  * for the existence of an {@link DynamicQuery} annotation and creates a JPA {@link DynamicQuery} from it.
  *
  * @author Giao Ho
- * @see 1.0.0
+ * @since 1.0.0
  */
 public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
     private static final SpelExpressionParser PARSER = new SpelExpressionParser();
@@ -36,6 +36,10 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
 
     /**
      * Creates a new {@link DynamicJpaRepositoryQuery} from the given {@link AbstractJpaQuery}.
+     *
+     * @param method DynamicJpaQueryMethod
+     * @param em EntityManager
+     * @param evaluationContextProvider QueryMethodEvaluationContextProvider
      */
     public DynamicJpaRepositoryQuery(DynamicJpaQueryMethod method, EntityManager em,
                                      QueryMethodEvaluationContextProvider evaluationContextProvider) {
@@ -134,6 +138,10 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
     /**
      * Creates an appropriate JPA query from an {@link EntityManager} according to the current {@link DynamicJpaRepositoryQuery}
      * type.
+     *
+     * @param queryString is query
+     * @param returnedType of method
+     * @return a {@link Query}
      */
     protected Query createJpaQuery(String queryString, ReturnedType returnedType) {
         EntityManager em = getEntityManager();

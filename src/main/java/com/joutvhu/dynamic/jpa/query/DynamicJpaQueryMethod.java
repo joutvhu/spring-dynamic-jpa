@@ -25,7 +25,7 @@ import java.util.Map;
  * JPA specific extension of {@link JpaQueryMethod}.
  *
  * @author Giao Ho
- * @see 1.0.0
+ * @since 1.0.0
  */
 public class DynamicJpaQueryMethod extends JpaQueryMethod {
     private static final Map<String, String> templateMap = new HashMap<>();

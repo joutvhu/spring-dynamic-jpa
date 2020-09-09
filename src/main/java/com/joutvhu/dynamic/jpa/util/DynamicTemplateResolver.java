@@ -12,10 +12,10 @@ import java.util.List;
  * Read and parse template query files into query templates
  *
  * @author Giao Ho
- * @see 1.0.0
+ * @since 1.0.0
  */
 public class DynamicTemplateResolver {
-    private Resource resource;
+    private final Resource resource;
     private List<String> lines;
     private String encoding = "UTF-8";
 
@@ -34,7 +34,7 @@ public class DynamicTemplateResolver {
     public static List<String> readLines(InputStream input, String encoding) throws IOException {
         BufferedReader reader = toBufferedReader(new InputStreamReader(input,
                 encoding == null ? Charset.defaultCharset() : Charset.forName(encoding)));
-        List<String> list = new ArrayList();
+        List<String> list = new ArrayList<>();
 
         for (String line = reader.readLine(); line != null; line = reader.readLine()) {
             list.add(line);
