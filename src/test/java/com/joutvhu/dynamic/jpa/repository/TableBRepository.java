@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface TableBRepository extends JpaRepository<TableB, String> {
+public interface TableBRepository extends JpaRepository<TableB, Long> {
     @DynamicQuery
     List<TableB> findB1(String fieldE);
 
