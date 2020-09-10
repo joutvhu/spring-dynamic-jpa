@@ -3,6 +3,7 @@ package com.joutvhu.dynamic.jpa.query;
 import com.joutvhu.dynamic.jpa.DynamicQuery;
 import com.joutvhu.dynamic.jpa.DynamicQueryTemplates;
 import com.joutvhu.dynamic.jpa.util.ApplicationContextHolder;
+import com.joutvhu.dynamic.jpa.util.TemplateConfiguration;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.springframework.core.annotation.AnnotatedElementUtils;
@@ -29,7 +30,7 @@ import java.util.Map;
  */
 public class DynamicJpaQueryMethod extends JpaQueryMethod {
     private static final Map<String, String> templateMap = new HashMap<>();
-    private static Configuration cfg = new Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
+    private static Configuration cfg = TemplateConfiguration.instanceWithDefault().configuration();
 
     private final Method method;
     private final Lazy<Boolean> isNativeQuery;
