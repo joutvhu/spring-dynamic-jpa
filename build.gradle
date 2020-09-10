@@ -4,12 +4,12 @@ plugins {
     id 'groovy'
     id 'signing'
     id 'maven-publish'
-    id 'org.springframework.boot' version '2.3.3.RELEASE'
+    id 'org.springframework.boot' version '2.3.0.RELEASE'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
 }
 
 group = 'com.github.joutvhu'
-version = '1.1.0'
+version = '1.1.13-SNAPSHOT'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -54,6 +54,25 @@ dependencies {
     testCompile 'org.junit.platform:junit-platform-commons'
 }
 
+jar {
+    manifest {
+        attributes 'Built-By': 'joutvhu (Giao Ho)'
+    }
+    into("META-INF/maven/${project.group}/${project.name}") {
+        from {
+            generatePomFileForMavenPublication
+        }
+        rename {
+            it.replace('pom-default.xml', 'pom.xml')
+        }
+    }
+}
+
+task fatJar(type: Jar) {
+    manifest.from jar.manifest
+    with jar
+}
+
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
     from sourceSets.main.allSource
@@ -65,7 +84,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 }
 
 artifacts {
-    archives javadocJar, sourcesJar
+    archives fatJar, sourcesJar, javadocJar
 }
 
 test {
@@ -75,13 +94,15 @@ test {
 publishing {
     publications {
         maven(MavenPublication) {
+            from components.java
+
             groupId = group
-            artifactId = project.rootProject.name
-            artifacts = [sourcesJar, javadocJar]
+            artifactId = project.name
+            artifacts = [fatJar, sourcesJar, javadocJar]
             version = version
 
             pom {
-                name = project.rootProject.name
+                name = project.name
                 description = 'Easier to implement dynamic queries with JpaRepository'
                 url = 'https://github.com/joutvhu/spring-dynamic-jpa'
                 licenses {
