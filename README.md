@@ -32,7 +32,7 @@ implementation 'com.github.joutvhu:spring-dynamic-jpa:1.1.0'
 
 ### Dynamic query
 
-- Methods annotated with `@DynamicQuery` tells `DynamicJpaQueryLookupStrategy` know the content of the query is query template. It needs to parse the query template to query string before execute the query.
+- Methods annotated with `@DynamicQuery` tells `DynamicJpaQueryLookupStrategy` to know the content of the query is query template. It needs to parse the query template to query string before executing the query.
 
 ```java
 public interface UserRepository extends JpaRepository<User, Long> {
