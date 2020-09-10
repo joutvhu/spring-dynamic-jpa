@@ -42,6 +42,6 @@ public class DynamicJpaRepositoryFactory extends JpaRepositoryFactory {
     @Override
     protected Optional<QueryLookupStrategy> getQueryLookupStrategy(QueryLookupStrategy.Key key, QueryMethodEvaluationContextProvider evaluationContextProvider) {
         return Optional.of(DynamicJpaQueryLookupStrategy
-                .create(entityManager, extractor, key, evaluationContextProvider, escapeCharacter));
+                .create(entityManager, key, extractor, evaluationContextProvider, escapeCharacter));
     }
 }
