@@ -138,6 +138,12 @@ select count(t) from User t
 <#if role??>
   where t.role = :role
 </#if>
+
+-- User:findByGroup
+select t from User t
+<#if group.name?starts_with("Git")>
+  where t.groupId = :#{#group.id}
+</#if>
 ```
 
 - If you don't specify the query template inside the `@DynamicQuery` annotation, `DynamicJpaRepositoryQuery` will find it from the external query files.
@@ -157,9 +163,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @DynamicQuery
     Page<User> findByRole(String role, Pageable pageable);
+
+    @DynamicQuery
+    List<User> findByGroup(Group group);
 }
 ```
 
 ## How to write query template
 
 - This library using [Apache FreeMarker](https://freemarker.apache.org) template engine to write query template. You can refer to [Freemarker Document](https://freemarker.apache.org/docs/index.html) to know more about rules.
+
+- Use [Online FreeMarker Template Tester](https://try.freemarker.apache.org) with `tagSyntax = angleBracket` and `interpolationSyntax = dollar` to test your query template.

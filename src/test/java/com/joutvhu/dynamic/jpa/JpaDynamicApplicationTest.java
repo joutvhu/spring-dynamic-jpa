@@ -3,6 +3,7 @@ package com.joutvhu.dynamic.jpa;
 import com.joutvhu.dynamic.jpa.entity.TableA;
 import com.joutvhu.dynamic.jpa.entity.TableB;
 import com.joutvhu.dynamic.jpa.model.TableAB;
+import com.joutvhu.dynamic.jpa.model.ModelC;
 import com.joutvhu.dynamic.jpa.repository.TableARepository;
 import com.joutvhu.dynamic.jpa.repository.TableBRepository;
 import org.junit.Assert;
@@ -131,5 +132,11 @@ public class JpaDynamicApplicationTest {
     public void sumB1() {
         long result = tableBRepository.sumB1(40000000L);
         Assert.assertEquals(33452681L, result);
+    }
+
+    @Test
+    public void findB4() {
+        List<TableB> result = tableBRepository.findB4(new ModelC(0L, "HTYRB"));
+        Assert.assertEquals(1, result.size());
     }
 }
