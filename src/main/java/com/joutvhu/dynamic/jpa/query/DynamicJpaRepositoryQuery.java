@@ -13,8 +13,8 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.Tuple;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * {@link RepositoryQuery} implementation that inspects a {@link DynamicJpaQueryMethod}
@@ -29,7 +29,7 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
     private final QueryMethodEvaluationContextProvider evaluationContextProvider;
     private final DynamicQueryMetadataCache metadataCache = new DynamicQueryMetadataCache();
 
-    private JpaParametersParameterAccessor accessor;
+    private Object[] values;
     private DynamicBasedStringQuery query;
     private DynamicBasedStringQuery countQuery;
     private Lazy<ParameterBinder> parameterBinder;
@@ -37,8 +37,8 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
     /**
      * Creates a new {@link DynamicJpaRepositoryQuery} from the given {@link AbstractJpaQuery}.
      *
-     * @param method DynamicJpaQueryMethod
-     * @param em EntityManager
+     * @param method                    DynamicJpaQueryMethod
+     * @param em                        EntityManager
      * @param evaluationContextProvider QueryMethodEvaluationContextProvider
      */
     public DynamicJpaRepositoryQuery(DynamicJpaQueryMethod method, EntityManager em,
@@ -49,10 +49,10 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
         this.evaluationContextProvider = evaluationContextProvider;
     }
 
-    protected String buildQuery(Template template, JpaParametersParameterAccessor accessor) {
+    protected String buildQuery(Template template, DynamicJpaParameterAccessor accessor) {
         try {
             if (template == null) return StringUtils.EMPTY;
-            Map<String, Object> model = getParamModel(accessor);
+            Map<String, Object> model = accessor.getParamModel();
             String queryString = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
             if (queryString != null) {
                 queryString = queryString
@@ -73,9 +73,9 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
                 evaluationContextProvider);
     }
 
-    protected DynamicBasedStringQuery setAccessor(JpaParametersParameterAccessor accessor) {
-        if (query == null || this.accessor != accessor) {
-            this.accessor = accessor;
+    protected DynamicBasedStringQuery setAccessor(DynamicJpaParameterAccessor accessor, Object[] values) {
+        if (query == null || this.values != values) {
+            this.values = values;
             String queryString = buildQuery(method.getQueryTemplate(), accessor);
             query = new DynamicBasedStringQuery(queryString, method.getEntityInformation(), PARSER);
             parameterBinder = Lazy.of(createBinder());
@@ -86,8 +86,10 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
     }
 
     @Override
-    protected Query doCreateQuery(JpaParametersParameterAccessor accessor) {
-        setAccessor(accessor);
+    protected Query doCreateQuery(Object[] values) {
+        DynamicJpaParameterAccessor accessor =
+                new DynamicJpaParameterAccessor(getQueryMethod().getParameters(), values);
+        setAccessor(accessor, values);
 
         String sortedQueryString = QueryUtils
                 .applySorting(query.getQueryString(), accessor.getSort(), query.getAlias());
@@ -99,8 +101,10 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
     }
 
     @Override
-    protected Query doCreateCountQuery(JpaParametersParameterAccessor accessor) {
-        setAccessor(accessor);
+    protected Query doCreateCountQuery(Object[] values) {
+        DynamicJpaParameterAccessor accessor =
+                new DynamicJpaParameterAccessor(getQueryMethod().getParameters(), values);
+        setAccessor(accessor, values);
 
         String countQueryString = buildQuery(method.getCountQueryTemplate(), accessor);
         String countProjectionString = buildQuery(method.getCountProjectionTemplate(), accessor);
@@ -123,23 +127,11 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
         return query;
     }
 
-    private Map<String, Object> getParamModel(JpaParametersParameterAccessor accessor) {
-        Map<String, Object> result = new HashMap<>();
-        JpaParameters parameters = getQueryMethod().getParameters();
-        parameters.forEach(parameter -> {
-            Object value = accessor.getValue(parameter);
-            if (value != null && parameter.isBindable()) {
-                result.put(parameter.getName().orElse(null), value);
-            }
-        });
-        return result;
-    }
-
     /**
      * Creates an appropriate JPA query from an {@link EntityManager} according to the current {@link DynamicJpaRepositoryQuery}
      * type.
      *
-     * @param queryString is query
+     * @param queryString  is query
      * @param returnedType of method
      * @return a {@link Query}
      */
@@ -151,8 +143,8 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
         } else {
             if (this.query.hasConstructorExpression() || this.query.isDefaultProjection())
                 return em.createQuery(queryString);
-            Class<?> typeToRead = getTypeToRead(returnedType);
-            return typeToRead == null ? em.createQuery(queryString) : em.createQuery(queryString, typeToRead);
+            Optional<Class<?>> typeToRead = getTypeToRead(returnedType);
+            return typeToRead.isPresent() ? em.createQuery(queryString, typeToRead.get()) : em.createQuery(queryString);
         }
     }
 
