@@ -1,6 +1,7 @@
 package com.joutvhu.dynamic.jpa;
 
 import com.joutvhu.dynamic.jpa.util.DynamicTemplateResolver;
+import com.joutvhu.dynamic.jpa.util.TemplateConfiguration;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -24,12 +25,10 @@ import java.io.IOException;
 @Log4j2
 @NoArgsConstructor
 public class DynamicQueryTemplates implements ResourceLoaderAware, InitializingBean {
-    private static Configuration cfg = new Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
     private static StringTemplateLoader sqlTemplateLoader = new StringTemplateLoader();
-
-    static {
-        cfg.setTemplateLoader(sqlTemplateLoader);
-    }
+    private static Configuration cfg = TemplateConfiguration.instanceWithDefault()
+            .templateLoader(sqlTemplateLoader)
+            .configuration();
 
     private String encoding = "UTF-8";
     private String templateLocation = "classpath:/query";

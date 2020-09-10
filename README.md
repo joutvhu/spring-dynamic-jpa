@@ -7,14 +7,14 @@ The Spring Dynamic JPA will make it easy to implement dynamic queries with JpaRe
 - Add dependency
 
 ```groovy
-implementation 'com.github.joutvhu:spring-dynamic-jpa:2.3.0'
+implementation 'com.github.joutvhu:spring-dynamic-jpa:2.3.1'
 ```
 
 ```xml
 <dependency>
     <groupId>com.github.joutvhu</groupId>
     <artifactId>spring-dynamic-jpa</artifactId>
-    <version>2.3.0</version>
+    <version>2.3.1</version>
 </dependency>
 ```
 
@@ -22,9 +22,9 @@ implementation 'com.github.joutvhu:spring-dynamic-jpa:2.3.0'
 
 | spring-boot version | spring-dynamic-jpa version |
 |:----------:|:-------------:|
-| 2.1.x.RELEASE | 2.1.0 |
-| 2.2.x.RELEASE | 2.2.0 |
-| 2.3.x.RELEASE | 2.3.0 |
+| 2.1.x.RELEASE | 2.1.1 |
+| 2.2.x.RELEASE | 2.2.1 |
+| 2.3.x.RELEASE | 2.3.1 |
 
 - To use the dynamic query, you need to set the jpa repository's `repositoryFactoryBeanClass` property to `DynamicJpaRepositoryFactoryBean.class`.
 
@@ -138,6 +138,12 @@ select count(t) from User t
 <#if role??>
   where t.role = :role
 </#if>
+
+-- User:findByGroup
+select t from User t
+<#if group.name?starts_with("Git")>
+  where t.groupId = :#{#group.id}
+</#if>
 ```
 
 - If you don't specify the query template inside the `@DynamicQuery` annotation, `DynamicJpaRepositoryQuery` will find it from the external query files.
@@ -157,9 +163,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @DynamicQuery
     Page<User> findByRole(String role, Pageable pageable);
+
+    @DynamicQuery
+    List<User> findByGroup(Group group);
 }
 ```
 
 ## How to write query template
 
 - This library using [Apache FreeMarker](https://freemarker.apache.org) template engine to write query template. You can refer to [Freemarker Document](https://freemarker.apache.org/docs/index.html) to know more about rules.
+
+- Use [Online FreeMarker Template Tester](https://try.freemarker.apache.org) with `tagSyntax = angleBracket` and `interpolationSyntax = dollar` to test your query template.
