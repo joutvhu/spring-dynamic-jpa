@@ -35,6 +35,14 @@ public class DynamicJpaParameterAccessor extends JpaParametersParameterAccessor 
         this.accessor = accessor;
     }
 
+    public static DynamicJpaParameterAccessor of(Parameters<?, ?> parameters, Object[] values) {
+        return new DynamicJpaParameterAccessor(parameters, values);
+    }
+
+    public static DynamicJpaParameterAccessor of(JpaParametersParameterAccessor accessor) {
+        return new DynamicJpaParameterAccessor(accessor);
+    }
+
     /**
      * Get parameter values
      *

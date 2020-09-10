@@ -87,8 +87,7 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
 
     @Override
     protected Query doCreateQuery(Object[] values) {
-        DynamicJpaParameterAccessor accessor =
-                new DynamicJpaParameterAccessor(getQueryMethod().getParameters(), values);
+        DynamicJpaParameterAccessor accessor = DynamicJpaParameterAccessor.of(getQueryMethod().getParameters(), values);
         setAccessor(accessor, values);
 
         String sortedQueryString = QueryUtils
@@ -102,8 +101,7 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
 
     @Override
     protected Query doCreateCountQuery(Object[] values) {
-        DynamicJpaParameterAccessor accessor =
-                new DynamicJpaParameterAccessor(getQueryMethod().getParameters(), values);
+        DynamicJpaParameterAccessor accessor = DynamicJpaParameterAccessor.of(getQueryMethod().getParameters(), values);
         setAccessor(accessor, values);
 
         String countQueryString = buildQuery(method.getCountQueryTemplate(), accessor);
