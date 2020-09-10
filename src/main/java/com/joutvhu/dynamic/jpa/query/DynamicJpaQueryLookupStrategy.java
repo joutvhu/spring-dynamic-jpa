@@ -29,7 +29,7 @@ public class DynamicJpaQueryLookupStrategy implements QueryLookupStrategy {
     private QueryLookupStrategy jpaQueryLookupStrategy;
     private QueryMethodEvaluationContextProvider evaluationContextProvider;
 
-    public DynamicJpaQueryLookupStrategy(EntityManager entityManager, QueryExtractor extractor, @Nullable Key key,
+    public DynamicJpaQueryLookupStrategy(EntityManager entityManager, @Nullable Key key, QueryExtractor extractor,
                                          QueryMethodEvaluationContextProvider evaluationContextProvider, EscapeCharacter escape) {
         this.jpaQueryLookupStrategy = JpaQueryLookupStrategy.create(entityManager,
                 new DefaultJpaQueryMethodFactory(extractor), key, evaluationContextProvider, escape);
@@ -51,11 +51,11 @@ public class DynamicJpaQueryLookupStrategy implements QueryLookupStrategy {
         return annotation != null;
     }
 
-    public static QueryLookupStrategy create(EntityManager entityManager, QueryExtractor extractor, @Nullable Key key,
+    public static QueryLookupStrategy create(EntityManager entityManager, @Nullable Key key, QueryExtractor extractor,
                                              QueryMethodEvaluationContextProvider evaluationContextProvider, EscapeCharacter escape) {
         Assert.notNull(entityManager, "EntityManager must not be null!");
         Assert.notNull(evaluationContextProvider, "EvaluationContextProvider must not be null!");
 
-        return new DynamicJpaQueryLookupStrategy(entityManager, extractor, key, evaluationContextProvider, escape);
+        return new DynamicJpaQueryLookupStrategy(entityManager, key, extractor, evaluationContextProvider, escape);
     }
 }
