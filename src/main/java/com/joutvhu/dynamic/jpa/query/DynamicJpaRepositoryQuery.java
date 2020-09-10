@@ -52,7 +52,7 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
     protected String buildQuery(Template template, JpaParametersParameterAccessor accessor) {
         try {
             if (template == null) return StringUtils.EMPTY;
-            Map<String, Object> model = getParamModel(accessor);
+            Map<String, Object> model = DynamicJpaParameterAccessor.of(accessor).getParamModel();
             String queryString = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
             if (queryString != null) {
                 queryString = queryString
@@ -121,18 +121,6 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
         metadataCache.bind(queryString, query, accessor, parameterBinder);
 
         return query;
-    }
-
-    private Map<String, Object> getParamModel(JpaParametersParameterAccessor accessor) {
-        Map<String, Object> result = new HashMap<>();
-        JpaParameters parameters = getQueryMethod().getParameters();
-        parameters.forEach(parameter -> {
-            Object value = accessor.getValue(parameter);
-            if (value != null && parameter.isBindable()) {
-                result.put(parameter.getName().orElse(null), value);
-            }
-        });
-        return result;
     }
 
     /**
