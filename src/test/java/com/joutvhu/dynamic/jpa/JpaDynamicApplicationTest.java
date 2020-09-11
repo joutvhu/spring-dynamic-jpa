@@ -2,8 +2,8 @@ package com.joutvhu.dynamic.jpa;
 
 import com.joutvhu.dynamic.jpa.entity.TableA;
 import com.joutvhu.dynamic.jpa.entity.TableB;
-import com.joutvhu.dynamic.jpa.model.TableAB;
 import com.joutvhu.dynamic.jpa.model.ModelC;
+import com.joutvhu.dynamic.jpa.model.TableAB;
 import com.joutvhu.dynamic.jpa.repository.TableARepository;
 import com.joutvhu.dynamic.jpa.repository.TableBRepository;
 import org.junit.Assert;

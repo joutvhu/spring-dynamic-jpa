@@ -14,7 +14,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.Tuple;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * {@link RepositoryQuery} implementation that inspects a {@link DynamicJpaQueryMethod}
@@ -26,7 +25,7 @@ import java.util.Optional;
 public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
     private static final SpelExpressionParser PARSER = new SpelExpressionParser();
     private final DynamicJpaQueryMethod method;
-    private final QueryMethodEvaluationContextProvider evaluationContextProvider;
+    private final EvaluationContextProvider evaluationContextProvider;
     private final DynamicQueryMetadataCache metadataCache = new DynamicQueryMetadataCache();
 
     private Object[] values;
@@ -42,7 +41,7 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
      * @param evaluationContextProvider QueryMethodEvaluationContextProvider
      */
     public DynamicJpaRepositoryQuery(DynamicJpaQueryMethod method, EntityManager em,
-                                     QueryMethodEvaluationContextProvider evaluationContextProvider) {
+                                     EvaluationContextProvider evaluationContextProvider) {
         super(method, em);
 
         this.method = method;
@@ -78,7 +77,7 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
             this.values = values;
             String queryString = buildQuery(method.getQueryTemplate(), accessor);
             query = new DynamicBasedStringQuery(queryString, method.getEntityInformation(), PARSER);
-            parameterBinder = Lazy.of(createBinder());
+            parameterBinder = new Lazy<>(this::createBinder);
 
             validateQuery();
         }
@@ -141,8 +140,9 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
         } else {
             if (this.query.hasConstructorExpression() || this.query.isDefaultProjection())
                 return em.createQuery(queryString);
-            Optional<Class<?>> typeToRead = getTypeToRead(returnedType);
-            return typeToRead.isPresent() ? em.createQuery(queryString, typeToRead.get()) : em.createQuery(queryString);
+            return getTypeToRead()
+                    .<Query>map(it -> em.createQuery(queryString, it))
+                    .orElseGet(() -> em.createQuery(queryString));
         }
     }
 

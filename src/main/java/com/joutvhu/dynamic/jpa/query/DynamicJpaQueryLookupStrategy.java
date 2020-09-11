@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.query.JpaQueryLookupStrategy;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.repository.core.NamedQueries;
 import org.springframework.data.repository.core.RepositoryMetadata;
+import org.springframework.data.repository.query.EvaluationContextProvider;
 import org.springframework.data.repository.query.QueryLookupStrategy;
-import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
 import org.springframework.data.repository.query.RepositoryQuery;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
@@ -25,11 +25,12 @@ public class DynamicJpaQueryLookupStrategy implements QueryLookupStrategy {
     private final EntityManager entityManager;
     private QueryExtractor extractor;
     private QueryLookupStrategy jpaQueryLookupStrategy;
-    private QueryMethodEvaluationContextProvider evaluationContextProvider;
+    private EvaluationContextProvider evaluationContextProvider;
 
     public DynamicJpaQueryLookupStrategy(EntityManager entityManager, @Nullable Key key, QueryExtractor extractor,
-                                         QueryMethodEvaluationContextProvider evaluationContextProvider) {
-        this.jpaQueryLookupStrategy = JpaQueryLookupStrategy.create(entityManager, key, extractor, evaluationContextProvider);
+                                         EvaluationContextProvider evaluationContextProvider) {
+        this.jpaQueryLookupStrategy = JpaQueryLookupStrategy
+                .create(entityManager, key, extractor, evaluationContextProvider);
         this.extractor = extractor;
         this.entityManager = entityManager;
         this.evaluationContextProvider = evaluationContextProvider;
@@ -49,8 +50,9 @@ public class DynamicJpaQueryLookupStrategy implements QueryLookupStrategy {
     }
 
     public static QueryLookupStrategy create(EntityManager entityManager, @Nullable Key key, QueryExtractor extractor,
-                                             QueryMethodEvaluationContextProvider evaluationContextProvider) {
+                                             EvaluationContextProvider evaluationContextProvider) {
         Assert.notNull(entityManager, "EntityManager must not be null!");
+        Assert.notNull(extractor, "QueryExtractor must not be null!");
         Assert.notNull(evaluationContextProvider, "EvaluationContextProvider must not be null!");
 
         return new DynamicJpaQueryLookupStrategy(entityManager, key, extractor, evaluationContextProvider);

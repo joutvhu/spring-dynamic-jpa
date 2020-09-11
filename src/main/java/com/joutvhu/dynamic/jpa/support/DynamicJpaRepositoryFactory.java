@@ -4,8 +4,8 @@ import com.joutvhu.dynamic.jpa.query.DynamicJpaQueryLookupStrategy;
 import org.springframework.data.jpa.provider.PersistenceProvider;
 import org.springframework.data.jpa.provider.QueryExtractor;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
+import org.springframework.data.repository.query.EvaluationContextProvider;
 import org.springframework.data.repository.query.QueryLookupStrategy;
-import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
 
 import javax.persistence.EntityManager;
 import java.util.Optional;
@@ -32,7 +32,7 @@ public class DynamicJpaRepositoryFactory extends JpaRepositoryFactory {
     }
 
     @Override
-    protected Optional<QueryLookupStrategy> getQueryLookupStrategy(QueryLookupStrategy.Key key, QueryMethodEvaluationContextProvider evaluationContextProvider) {
+    protected Optional<QueryLookupStrategy> getQueryLookupStrategy(QueryLookupStrategy.Key key, EvaluationContextProvider evaluationContextProvider) {
         return Optional.of(DynamicJpaQueryLookupStrategy
                 .create(entityManager, key, extractor, evaluationContextProvider));
     }
