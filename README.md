@@ -22,6 +22,7 @@ implementation 'com.github.joutvhu:spring-dynamic-jpa:2.3.1'
 
 | spring-boot version | spring-dynamic-jpa version |
 |:----------:|:-------------:|
+| 2.0.x.RELEASE | 2.0.1 |
 | 2.1.x.RELEASE | 2.1.1 |
 | 2.2.x.RELEASE | 2.2.1 |
 | 2.3.x.RELEASE | 2.3.1 |
