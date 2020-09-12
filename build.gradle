@@ -50,10 +50,12 @@ dependencies {
     compile 'org.apache.logging.log4j:log4j-api:2.13.3'
     compile 'com.google.code.findbugs:jsr305:3.0.2'
 
-    testCompile 'org.springframework.boot:spring-boot-starter-test'
     testCompile 'junit:junit'
+    testCompile 'org.junit.jupiter:junit-jupiter-api'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
     testCompile 'com.h2database:h2'
-    testCompile 'org.junit.platform:junit-platform-commons'
 }
 
 jar {
@@ -90,7 +92,12 @@ artifacts {
 }
 
 test {
-    useJUnitPlatform()
+    useJUnitPlatform {
+        includeEngines 'junit-vintage'
+    }
+    filter {
+        includeTestsMatching 'com.joutvhu.dynamic.jpa.*'
+    }
 }
 
 publishing {
