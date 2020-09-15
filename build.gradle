@@ -52,8 +52,12 @@ dependencies {
     compile 'org.apache.logging.log4j:log4j-api:2.13.3'
     compile 'com.google.code.findbugs:jsr305:3.0.2'
 
+    testCompile 'junit:junit:4.13'
+    testCompile 'org.junit.jupiter:junit-jupiter-api:5.6.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
+    testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.6.2'
+
     testCompile 'org.springframework.boot:spring-boot-starter-test'
-    testCompile 'junit:junit'
     testCompile 'com.h2database:h2'
 }
 
@@ -91,7 +95,12 @@ artifacts {
 }
 
 test {
-    useJUnit()
+    useJUnitPlatform {
+        includeEngines 'junit-vintage'
+    }
+    filter {
+        includeTestsMatching 'com.joutvhu.dynamic.jpa.*'
+    }
 }
 
 publishing {

@@ -21,8 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
-//@TestPropertySource(locations = "classpath:application.properties")
-//@ContextConfiguration(classes = JpaDynamicApplication.class)
 @SpringBootTest(classes = JpaDynamicApplication.class)
 @Transactional
 public class JpaDynamicApplicationTest {
