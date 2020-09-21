@@ -8,7 +8,7 @@ import java.lang.annotation.*;
  * Annotation to declare finder dynamic queries directly on repository methods.
  *
  * @author Giao Ho
- * @since 1.0.0
+ * @since 2.x.1
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})
