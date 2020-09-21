@@ -32,6 +32,14 @@ public class DirectiveTest {
     }
 
     @Test
+    public void where3Test() throws IOException, TemplateException {
+        Configuration cfg = TemplateConfiguration.instanceWithDefault().configuration();
+        Template template = new Template("where", "<@where> \nOR\n   abcd  \nAND\n </@where>", cfg);
+        String queryString = FreeMarkerTemplateUtils.processTemplateIntoString(template, new HashMap<>());
+        Assert.assertEquals(" where abcd ", queryString);
+    }
+
+    @Test
     public void set1Test() throws IOException, TemplateException {
         Configuration cfg = TemplateConfiguration.instanceWithDefault().configuration();
         Template template = new Template("set", "<@set> ,abcd, </@set>", cfg);
