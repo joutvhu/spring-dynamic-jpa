@@ -9,7 +9,7 @@ import java.util.Collection;
  * Help call method of {@link ApplicationContext} from any class.
  *
  * @author Giao Ho
- * @since 1.0.0
+ * @since 2.x.1
  */
 @UtilityClass
 public class ApplicationContextHolder {

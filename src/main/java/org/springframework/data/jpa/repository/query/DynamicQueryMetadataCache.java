@@ -10,7 +10,7 @@ import static org.springframework.data.jpa.repository.query.QueryParameterSetter
  * Cache for {@link DynamicQueryMetadataCache}. Optimizes for small cache sizes on a best-effort basis.
  *
  * @author Giao Ho
- * @since 1.0.0
+ * @since 2.x.1
  */
 public class DynamicQueryMetadataCache {
     public Query bindAndPrepare(String queryString, Query query, DynamicJpaParameterAccessor accessor,

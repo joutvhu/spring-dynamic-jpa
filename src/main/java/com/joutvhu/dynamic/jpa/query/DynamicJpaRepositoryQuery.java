@@ -20,7 +20,7 @@ import java.util.Map;
  * for the existence of an {@link DynamicQuery} annotation and creates a JPA {@link DynamicQuery} from it.
  *
  * @author Giao Ho
- * @since 1.0.0
+ * @since 2.x.1
  */
 public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
     private static final SpelExpressionParser PARSER = new SpelExpressionParser();
