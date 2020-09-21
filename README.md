@@ -180,33 +180,33 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
   - `@where` directive knows to only insert `WHERE` if there is any content returned by the containing tags. Furthermore, if that content begins or ends with `AND` or `OR`, it knows to strip it off.
 
-    ```sql
-    select t from User t
-    <@where>
-      <#if firstName?has_content>
-        and t.firstName = :firstName
-      </#if>
-      <#if lastName?has_content>
-        and t.lastName = :lastName
-      </#if>
-    </#where>
-    ```
-    
+  ```sql
+  select t from User t
+  <@where>
+    <#if firstName?has_content>
+      and t.firstName = :firstName
+    </#if>
+    <#if lastName?has_content>
+      and t.lastName = :lastName
+    </#if>
+  </#where>
+  ```
+
   - `@set` directive is like the `@where` directive, it removes the commas if it appears at the beginning or end of the content. Also, it will insert `SET` if the content is not empty.
-  
-    ```sql
-    update User t
-    <@set>
-      <#if firstName?has_content>
-        t.firstName = :firstName,
-      </#if>
-      <#if lastName?has_content>
-        t.lastName = :lastName,
-      </#if>
-    </#set>
-    where i.id = :userId
-    ```
-    
+
+  ```sql
+  update User t
+  <@set>
+    <#if firstName?has_content>
+      t.firstName = :firstName,
+    </#if>
+    <#if lastName?has_content>
+      t.lastName = :lastName,
+    </#if>
+  </#set>
+  where i.id = :userId
+  ```
+
   - `@trim` directive has four parameters: `prefix`, `prefixOverrides`, `suffix`, `suffixOverrides`.
     
     - `prefix` is the string value that will be inserted at the start of the content if it is not empty.
@@ -217,8 +217,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     
     - `suffixOverrides` are values that will be removed if they are at the end of a content.
     
-    ```sql
-    <@trim prefix="where (" prefixOverrides=["and ", "or "] suffix=")" suffixOverrides=[" and", " or"]>
-    ...
-    </@trim>
-    ```
+  ```sql
+  <@trim prefix="where (" prefixOverrides=["and ", "or "] suffix=")" suffixOverrides=[" and", " or"]>
+  ...
+  </@trim>
+  ```
