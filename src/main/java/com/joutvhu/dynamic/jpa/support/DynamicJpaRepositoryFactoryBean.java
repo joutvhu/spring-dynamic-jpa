@@ -20,7 +20,7 @@ import javax.persistence.EntityManager;
  * repository factories via Spring configuration.
  *
  * @author Giao Ho
- * @since 1.0.0
+ * @since 2.x.1
  */
 public class DynamicJpaRepositoryFactoryBean<T extends Repository<S, ID>, S, ID> extends JpaRepositoryFactoryBean<T, S, ID>
         implements ApplicationContextAware {

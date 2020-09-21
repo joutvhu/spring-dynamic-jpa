@@ -8,7 +8,7 @@ import javax.persistence.Query;
  * Cache for {@link DynamicQueryMetadataCache}. Optimizes for small cache sizes on a best-effort basis.
  *
  * @author Giao Ho
- * @since 1.0.0
+ * @since 2.x.1
  */
 public class DynamicQueryMetadataCache extends QueryParameterSetter.QueryMetadataCache {
     public Query bindAndPrepare(String queryString, Query query, JpaParametersParameterAccessor accessor,

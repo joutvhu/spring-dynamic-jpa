@@ -12,7 +12,7 @@ import java.util.List;
  * Read and parse template query files into query templates
  *
  * @author Giao Ho
- * @since 1.0.0
+ * @since 2.x.1
  */
 public class DynamicTemplateResolver {
     private final Resource resource;
