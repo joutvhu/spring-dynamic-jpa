@@ -10,7 +10,7 @@ import java.util.Map;
  * offers access to all the values, not just the bindable ones based on a {@link JpaParameters.JpaParameter} instance.
  *
  * @author Giao Ho
- * @since 1.0.0
+ * @since 2.x.1
  */
 public class DynamicJpaParameterAccessor extends JpaParametersParameterAccessor {
     private JpaParametersParameterAccessor accessor;

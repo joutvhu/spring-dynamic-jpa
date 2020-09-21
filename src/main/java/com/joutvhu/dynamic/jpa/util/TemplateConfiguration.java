@@ -1,5 +1,8 @@
 package com.joutvhu.dynamic.jpa.util;
 
+import com.joutvhu.dynamic.jpa.directive.SetDirective;
+import com.joutvhu.dynamic.jpa.directive.TrimDirective;
+import com.joutvhu.dynamic.jpa.directive.WhereDirective;
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 
@@ -7,7 +10,7 @@ import freemarker.template.Configuration;
  * Freemarker configuration builder.
  *
  * @author Giao Ho
- * @since 1.0.0
+ * @since 2.x.1
  */
 public class TemplateConfiguration {
     private Configuration cfg;
@@ -27,6 +30,11 @@ public class TemplateConfiguration {
     public TemplateConfiguration applyDefault() {
         cfg.setTagSyntax(Configuration.ANGLE_BRACKET_TAG_SYNTAX);
         cfg.setInterpolationSyntax(Configuration.DOLLAR_INTERPOLATION_SYNTAX);
+
+        cfg.setSharedVariable("trim", new TrimDirective());
+        cfg.setSharedVariable("set", new SetDirective());
+        cfg.setSharedVariable("where", new WhereDirective());
+
         return this;
     }
 

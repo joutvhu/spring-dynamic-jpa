@@ -7,14 +7,14 @@ The Spring Dynamic JPA will make it easy to implement dynamic queries with JpaRe
 - Add dependency
 
 ```groovy
-implementation 'com.github.joutvhu:spring-dynamic-jpa:2.3.1'
+implementation 'com.github.joutvhu:spring-dynamic-jpa:2.3.2'
 ```
 
 ```xml
 <dependency>
     <groupId>com.github.joutvhu</groupId>
     <artifactId>spring-dynamic-jpa</artifactId>
-    <version>2.3.1</version>
+    <version>2.3.2</version>
 </dependency>
 ```
 
@@ -22,10 +22,10 @@ implementation 'com.github.joutvhu:spring-dynamic-jpa:2.3.1'
 
 | spring-boot version | spring-dynamic-jpa version |
 |:----------:|:-------------:|
-| 2.0.x.RELEASE | 2.0.1 |
-| 2.1.x.RELEASE | 2.1.1 |
-| 2.2.x.RELEASE | 2.2.1 |
-| 2.3.x.RELEASE | 2.3.1 |
+| 2.0.x.RELEASE | 2.0.2 |
+| 2.1.x.RELEASE | 2.1.2 |
+| 2.2.x.RELEASE | 2.2.2 |
+| 2.3.x.RELEASE | 2.3.2 |
 
 - To use the dynamic query, you need to set the jpa repository's `repositoryFactoryBeanClass` property to `DynamicJpaRepositoryFactoryBean.class`.
 
@@ -175,3 +175,50 @@ public interface UserRepository extends JpaRepository<User, Long> {
 - This library using [Apache FreeMarker](https://freemarker.apache.org) template engine to write query template. You can refer to [Freemarker Document](https://freemarker.apache.org/docs/index.html) to know more about rules.
 
 - Use [Online FreeMarker Template Tester](https://try.freemarker.apache.org) with `tagSyntax = angleBracket` and `interpolationSyntax = dollar` to test your query template.
+
+- From 2.x.2 version, we will have three directives are `<@where>`, `<@set>`, `<@trim>`
+
+  - `@where` directive knows to only insert `WHERE` if there is any content returned by the containing tags. Furthermore, if that content begins or ends with `AND` or `OR`, it knows to strip it off.
+
+  ```sql
+  select t from User t
+  <@where>
+    <#if firstName?has_content>
+      and t.firstName = :firstName
+    </#if>
+    <#if lastName?has_content>
+      and t.lastName = :lastName
+    </#if>
+  </#where>
+  ```
+
+  - `@set` directive is like the `@where` directive, it removes the commas if it appears at the beginning or end of the content. Also, it will insert `SET` if the content is not empty.
+
+  ```sql
+  update User t
+  <@set>
+    <#if firstName?has_content>
+      t.firstName = :firstName,
+    </#if>
+    <#if lastName?has_content>
+      t.lastName = :lastName,
+    </#if>
+  </#set>
+  where i.id = :userId
+  ```
+
+  - `@trim` directive has four parameters: `prefix`, `prefixOverrides`, `suffix`, `suffixOverrides`.
+    
+    - `prefix` is the string value that will be inserted at the start of the content if it is not empty.
+    
+    - `prefixOverrides` are values that will be removed if they are at the start of a content.
+    
+    - `suffix` is the string value that will be inserted at the end of the content if it is not empty.
+    
+    - `suffixOverrides` are values that will be removed if they are at the end of a content.
+    
+  ```sql
+  <@trim prefix="where (" prefixOverrides=["and ", "or "] suffix=")" suffixOverrides=[" and", " or"]>
+  ...
+  </@trim>
+  ```

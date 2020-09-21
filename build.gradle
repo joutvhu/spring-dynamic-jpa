@@ -9,7 +9,7 @@ plugins {
 }
 
 group = 'com.github.joutvhu'
-version = '2.3.1'
+version = '2.3.2'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
