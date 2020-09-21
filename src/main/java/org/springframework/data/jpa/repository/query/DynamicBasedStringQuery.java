@@ -6,7 +6,7 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
  * Extension of {@link StringQuery} that evaluates the given query string as a SpEL template-expression.
  *
  * @author Giao Ho
- * @since 1.0.0
+ * @since 2.x.1
  */
 public class DynamicBasedStringQuery extends ExpressionBasedStringQuery {
     /**

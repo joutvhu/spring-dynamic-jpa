@@ -7,7 +7,7 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
  * Factory for differently configured {@link ParameterBinder}.
  *
  * @author Giao Ho
- * @since 1.0.0
+ * @since 2.x.1
  */
 public class DynamicParameterBinderFactory extends ParameterBinderFactory {
     public static ParameterBinder createQueryAwareBinder(
