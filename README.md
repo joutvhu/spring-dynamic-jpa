@@ -189,7 +189,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     <#if lastName?has_content>
       and t.lastName = :lastName
     </#if>
-  </#where>
+  </@where>
   ```
 
   - `@set` directive is like the `@where` directive, it removes the commas if it appears at the beginning or end of the content. Also, it will insert `SET` if the content is not empty.
@@ -203,7 +203,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     <#if lastName?has_content>
       t.lastName = :lastName,
     </#if>
-  </#set>
+  </@set>
   where i.id = :userId
   ```
 
