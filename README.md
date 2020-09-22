@@ -204,7 +204,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
       t.lastName = :lastName,
     </#if>
   </@set>
-  where i.id = :userId
+  where t.userId = :userId
   ```
 
   - `@trim` directive has four parameters: `prefix`, `prefixOverrides`, `suffix`, `suffixOverrides`.
