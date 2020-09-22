@@ -176,7 +176,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 - Use [Online FreeMarker Template Tester](https://try.freemarker.apache.org) with `tagSyntax = angleBracket` and `interpolationSyntax = dollar` to test your query template.
 
-- From 2.x.2 version, we will have three directives are `<@where>`, `<@set>`, `<@trim>`
+- From version 2.x.2, we will have three directives are `<@where>`, `<@set>`, `<@trim>`
 
   - `@where` directive knows to only insert `WHERE` if there is any content returned by the containing tags. Furthermore, if that content begins or ends with `AND` or `OR`, it knows to strip it off.
 
