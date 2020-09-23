@@ -192,7 +192,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
   </@where>
   ```
 
-  - `@set` directive is like the `@where` directive, it removes the commas if it appears at the beginning or end of the content. Also, it will insert `SET` if the content is not empty.
+  - `@set` directive is like the `@where` directive, it removes the commas if it appears at the begins or ends of the content. Also, it will insert `SET` if the content is not empty.
 
   ```sql
   update User t
