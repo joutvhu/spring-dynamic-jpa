@@ -57,6 +57,7 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
             if (queryString != null) {
                 queryString = queryString
                         .replaceAll("\n", " ")
+                        .replaceAll("\t", " ")
                         .replaceAll(" +", " ")
                         .trim();
             }

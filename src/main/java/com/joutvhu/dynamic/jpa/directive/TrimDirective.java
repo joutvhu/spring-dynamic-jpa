@@ -48,11 +48,11 @@ public class TrimDirective implements TemplateDirectiveModel {
             String content = String.copyValueOf(cbuf);
 
             for (String prefix : symbols.prefixOverrides)
-                content = Pattern.compile("^[ \\n]*" + escapeRegular(prefix), Pattern.CASE_INSENSITIVE)
+                content = Pattern.compile("^[ \\t\\n]*" + escapeRegular(prefix), Pattern.CASE_INSENSITIVE)
                         .matcher(content)
                         .replaceAll("");
             for (String suffix : symbols.suffixOverrides)
-                content = Pattern.compile(escapeRegular(suffix) + "[ \\n]*$", Pattern.CASE_INSENSITIVE)
+                content = Pattern.compile(escapeRegular(suffix) + "[ \\t\\n]*$", Pattern.CASE_INSENSITIVE)
                         .matcher(content)
                         .replaceAll("");
 

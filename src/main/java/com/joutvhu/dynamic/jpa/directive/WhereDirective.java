@@ -26,6 +26,7 @@ public class WhereDirective implements TemplateDirectiveModel {
         for (String o : overrides) {
             result.add(prefix ? o + " " : " " + o);
             result.add(prefix ? o + "\n" : "\n" + o);
+            result.add(prefix ? o + "\t" : "\t" + o);
         }
         return result;
     }
