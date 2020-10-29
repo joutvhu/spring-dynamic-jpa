@@ -28,7 +28,7 @@ public class TrimDirective implements TemplateDirectiveModel {
     public void execute(Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateException, IOException {
         TrimSymbol symbols = new TrimSymbol(params);
         if (body != null)
-            body.render(new TrimWriter(env.getOut(), symbols));
+            TrimWriter.of(env.getOut(), symbols).render(body);
     }
 
     /**
@@ -37,6 +37,11 @@ public class TrimDirective implements TemplateDirectiveModel {
     public static class TrimWriter extends Writer {
         private final Writer out;
         private final TrimSymbol symbols;
+        private final StringBuffer contentBuffer = new StringBuffer();
+
+        public static TrimWriter of(Writer out, TrimSymbol symbols) {
+            return new TrimWriter(out, symbols);
+        }
 
         public TrimWriter(Writer out, TrimSymbol symbols) {
             this.out = out;
@@ -46,13 +51,18 @@ public class TrimDirective implements TemplateDirectiveModel {
         @Override
         public void write(char[] cbuf, int off, int len) throws IOException {
             String content = String.copyValueOf(cbuf);
+            this.contentBuffer.append(content);
+        }
+
+        public void afterWrite() throws IOException {
+            String content = this.contentBuffer.toString();
 
             for (String prefix : symbols.prefixOverrides)
-                content = Pattern.compile("^[ \\n]*" + escapeRegular(prefix), Pattern.CASE_INSENSITIVE)
+                content = Pattern.compile("^[ \\t\\n]*" + escapeRegular(prefix), Pattern.CASE_INSENSITIVE)
                         .matcher(content)
                         .replaceAll("");
             for (String suffix : symbols.suffixOverrides)
-                content = Pattern.compile(escapeRegular(suffix) + "[ \\n]*$", Pattern.CASE_INSENSITIVE)
+                content = Pattern.compile(escapeRegular(suffix) + "[ \\t\\n]*$", Pattern.CASE_INSENSITIVE)
                         .matcher(content)
                         .replaceAll("");
 
@@ -66,6 +76,11 @@ public class TrimDirective implements TemplateDirectiveModel {
             content = " " + content + " ";
 
             out.write(content);
+        }
+
+        public void render(TemplateDirectiveBody body) throws IOException, TemplateException {
+            body.render(this);
+            this.afterWrite();
         }
 
         private String escapeRegular(String regex) {
