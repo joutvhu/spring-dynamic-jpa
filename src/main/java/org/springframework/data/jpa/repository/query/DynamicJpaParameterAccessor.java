@@ -48,7 +48,6 @@ public class DynamicJpaParameterAccessor extends JpaParametersParameterAccessor 
      *
      * @return values
      */
-    @Override
     public Object[] getValues() {
         return values;
     }
