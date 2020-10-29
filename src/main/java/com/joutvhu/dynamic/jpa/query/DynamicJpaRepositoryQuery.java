@@ -2,7 +2,6 @@ package com.joutvhu.dynamic.jpa.query;
 
 import com.joutvhu.dynamic.jpa.DynamicQuery;
 import freemarker.template.Template;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.repository.query.*;
 import org.springframework.data.repository.query.*;
 import org.springframework.data.util.Lazy;
@@ -13,7 +12,6 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.Tuple;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -37,8 +35,8 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
     /**
      * Creates a new {@link DynamicJpaRepositoryQuery} from the given {@link AbstractJpaQuery}.
      *
-     * @param method DynamicJpaQueryMethod
-     * @param em EntityManager
+     * @param method                    DynamicJpaQueryMethod
+     * @param em                        EntityManager
      * @param evaluationContextProvider QueryMethodEvaluationContextProvider
      */
     public DynamicJpaRepositoryQuery(DynamicJpaQueryMethod method, EntityManager em,
@@ -51,21 +49,20 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
 
     protected String buildQuery(Template template, JpaParametersParameterAccessor accessor) {
         try {
-            if (template == null) return StringUtils.EMPTY;
-            Map<String, Object> model = DynamicJpaParameterAccessor.of(accessor).getParamModel();
-            String queryString = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
-            if (queryString != null) {
+            if (template != null) {
+                Map<String, Object> model = DynamicJpaParameterAccessor.of(accessor).getParamModel();
+                String queryString = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
                 queryString = queryString
                         .replaceAll("\n", " ")
                         .replaceAll("\t", " ")
                         .replaceAll(" +", " ")
                         .trim();
+                return queryString.isEmpty() ? null : queryString;
             }
-            return queryString;
         } catch (Exception e) {
             e.printStackTrace();
-            return StringUtils.EMPTY;
         }
+        return null;
     }
 
     @Override
@@ -128,7 +125,7 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
      * Creates an appropriate JPA query from an {@link EntityManager} according to the current {@link DynamicJpaRepositoryQuery}
      * type.
      *
-     * @param queryString is query
+     * @param queryString  is query
      * @param returnedType of method
      * @return a {@link Query}
      */
