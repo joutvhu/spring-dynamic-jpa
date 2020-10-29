@@ -29,9 +29,9 @@ public class DynamicJpaParameterAccessor extends JpaParametersParameterAccessor 
 
     public DynamicJpaParameterAccessor(JpaParametersParameterAccessor accessor) {
         super(accessor.getParameters(), accessor.getParameters().stream()
-                .map(parameter -> accessor.getValue(parameter)).toArray());
+                .map(accessor::getValue).toArray());
         this.values = accessor.getParameters().stream()
-                .map(parameter -> accessor.getValue(parameter)).toArray();
+                .map(accessor::getValue).toArray();
         this.accessor = accessor;
     }
 
@@ -48,6 +48,7 @@ public class DynamicJpaParameterAccessor extends JpaParametersParameterAccessor 
      *
      * @return values
      */
+    @Override
     public Object[] getValues() {
         return values;
     }
