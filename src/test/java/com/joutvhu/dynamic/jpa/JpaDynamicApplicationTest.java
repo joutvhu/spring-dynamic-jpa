@@ -1,9 +1,11 @@
 package com.joutvhu.dynamic.jpa;
 
+import com.joutvhu.dynamic.jpa.entity.TableC;
 import com.joutvhu.dynamic.jpa.entity.TableA;
 import com.joutvhu.dynamic.jpa.entity.TableB;
 import com.joutvhu.dynamic.jpa.model.ModelC;
 import com.joutvhu.dynamic.jpa.model.TableAB;
+import com.joutvhu.dynamic.jpa.repository.TableCRepository;
 import com.joutvhu.dynamic.jpa.repository.TableARepository;
 import com.joutvhu.dynamic.jpa.repository.TableBRepository;
 import org.junit.Assert;
@@ -18,6 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -28,6 +31,8 @@ public class JpaDynamicApplicationTest {
     private TableARepository tableARepository;
     @Autowired
     private TableBRepository tableBRepository;
+    @Autowired
+    private TableCRepository tableCRepository;
 
     @Test
     public void findA1() {
@@ -136,5 +141,17 @@ public class JpaDynamicApplicationTest {
     public void findB4() {
         List<TableB> result = tableBRepository.findB4(new ModelC(0L, "HTYRB"));
         Assert.assertEquals(1, result.size());
+    }
+
+    @Test
+    public void findC1() {
+        List<Long> c = new ArrayList<>();
+        c.add(101L);
+        c.add(104L);
+        c.add(410L);
+        Page<TableC> result = tableCRepository.search(null, "T", c,
+                PageRequest.of(0, 2, Sort.by("fieldA")));
+        Assert.assertEquals(2, result.getTotalPages());
+        Assert.assertEquals(3L, result.getTotalElements());
     }
 }
