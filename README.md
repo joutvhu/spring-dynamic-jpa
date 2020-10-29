@@ -7,14 +7,14 @@ The Spring Dynamic JPA will make it easy to implement dynamic queries with JpaRe
 - Add dependency
 
 ```groovy
-implementation 'com.github.joutvhu:spring-dynamic-jpa:2.3.2'
+implementation 'com.github.joutvhu:spring-dynamic-jpa:2.3.3'
 ```
 
 ```xml
 <dependency>
     <groupId>com.github.joutvhu</groupId>
     <artifactId>spring-dynamic-jpa</artifactId>
-    <version>2.3.2</version>
+    <version>2.3.3</version>
 </dependency>
 ```
 
@@ -22,10 +22,10 @@ implementation 'com.github.joutvhu:spring-dynamic-jpa:2.3.2'
 
 | spring-boot version | spring-dynamic-jpa version |
 |:----------:|:-------------:|
-| 2.0.x.RELEASE | 2.0.2 |
-| 2.1.x.RELEASE | 2.1.2 |
-| 2.2.x.RELEASE | 2.2.2 |
-| 2.3.x.RELEASE | 2.3.2 |
+| 2.0.x.RELEASE | 2.0.3 |
+| 2.1.x.RELEASE | 2.1.3 |
+| 2.2.x.RELEASE | 2.2.3 |
+| 2.3.x.RELEASE | 2.3.3 |
 
 - To use the dynamic query, you need to set the jpa repository's `repositoryFactoryBeanClass` property to `DynamicJpaRepositoryFactoryBean.class`.
 
@@ -176,7 +176,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 - Use [Online FreeMarker Template Tester](https://try.freemarker.apache.org) with `tagSyntax = angleBracket` and `interpolationSyntax = dollar` to test your query template.
 
-- From 2.x.2 version, we will have three directives are `<@where>`, `<@set>`, `<@trim>`
+- From version 2.x.2, we will have three directives are `<@where>`, `<@set>`, `<@trim>`
 
   - `@where` directive knows to only insert `WHERE` if there is any content returned by the containing tags. Furthermore, if that content begins or ends with `AND` or `OR`, it knows to strip it off.
 
@@ -204,7 +204,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
       t.lastName = :lastName,
     </#if>
   </@set>
-  where i.id = :userId
+  where t.userId = :userId
   ```
 
   - `@trim` directive has four parameters: `prefix`, `prefixOverrides`, `suffix`, `suffixOverrides`.
