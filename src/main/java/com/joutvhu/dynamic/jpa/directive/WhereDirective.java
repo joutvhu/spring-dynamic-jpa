@@ -26,6 +26,7 @@ public class WhereDirective implements TemplateDirectiveModel {
         for (String o : overrides) {
             result.add(prefix ? o + " " : " " + o);
             result.add(prefix ? o + "\n" : "\n" + o);
+            result.add(prefix ? o + "\t" : "\t" + o);
         }
         return result;
     }
@@ -37,6 +38,6 @@ public class WhereDirective implements TemplateDirectiveModel {
             throw new TemplateModelException("This directive doesn't allow parameters.");
 
         if (body != null)
-            body.render(new TrimDirective.TrimWriter(env.getOut(), symbols));
+            TrimDirective.TrimWriter.of(env.getOut(), symbols).render(body);
     }
 }
