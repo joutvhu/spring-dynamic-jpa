@@ -61,7 +61,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @DynamicQuery(
         value = "select USER_ID from USER\n" +
             "<#if name??>\n" +
-            "  and concat(FIRST_NAME, ' ', LAST_NAME) like %:name%\n" +
+            "  where concat(FIRST_NAME, ' ', LAST_NAME) like %:name%\n" +
             "</#if>",
         nativeQuery = true
     )
@@ -125,7 +125,7 @@ select t from User t where t.firstName = :firstName
 -- User:searchIdsByName
 select USER_ID from USER
 <#if name??>
-  and concat(FIRST_NAME, ' ', LAST_NAME) like %:name%
+  where concat(FIRST_NAME, ' ', LAST_NAME) like %:name%
 </#if>
 
 -- User:findByRole
