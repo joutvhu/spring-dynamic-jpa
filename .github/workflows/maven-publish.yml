@@ -52,5 +52,5 @@ jobs:
         run: gradle publishMavenPublicationToSonatypeRepository
 
       - name: Publish to GitHub Packages
-        if: ${{ github.ref == 'refs/heads/main' && steps.get_current_release.outputs.prerelease == false && steps.get_current_release.outputs.draft == false }}
+        if: ${{ steps.get_current_release.outputs.prerelease == false && steps.get_current_release.outputs.draft == false }}
         run: gradle publishMavenPublicationToGithubRepository
