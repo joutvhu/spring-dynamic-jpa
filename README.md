@@ -61,7 +61,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @DynamicQuery(
         value = "select USER_ID from USER\n" +
             "<#if name??>\n" +
-            "  and concat(FIRST_NAME, ' ', LAST_NAME) like %:name%\n" +
+            "  where concat(FIRST_NAME, ' ', LAST_NAME) like %:name%\n" +
             "</#if>",
         nativeQuery = true
     )
@@ -125,7 +125,7 @@ select t from User t where t.firstName = :firstName
 -- User:searchIdsByName
 select USER_ID from USER
 <#if name??>
-  and concat(FIRST_NAME, ' ', LAST_NAME) like %:name%
+  where concat(FIRST_NAME, ' ', LAST_NAME) like %:name%
 </#if>
 
 -- User:findByRole
@@ -192,7 +192,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
   </@where>
   ```
 
-  - `@set` directive is like the `@where` directive, it removes the commas if it appears at the beginning or end of the content. Also, it will insert `SET` if the content is not empty.
+  - `@set` directive is like the `@where` directive, it removes the commas if it appears at the begins or ends of the content. Also, it will insert `SET` if the content is not empty.
 
   ```sql
   update User t
