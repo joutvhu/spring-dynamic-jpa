@@ -3,6 +3,7 @@ plugins {
     id 'idea'
     id 'groovy'
     id 'signing'
+    id 'java-library'
     id 'maven-publish'
     id 'org.springframework.boot' version '2.0.0.RELEASE'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
@@ -49,12 +50,14 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.11'
     implementation 'org.apache.logging.log4j:log4j-api:2.17.0'
 
-    testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
-    testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.8.2'
+    testImplementation(platform('org.junit:junit-bom:5.8.2'))
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'junit', module: 'junit'
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
         exclude group: 'org.apache.logging.log4j', module: 'log4j-api'
         exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
     }
@@ -63,6 +66,7 @@ dependencies {
 }
 
 jar {
+    enabled = true
     manifest {
         attributes 'Built-By': 'joutvhu (Giao Ho)'
     }
@@ -74,6 +78,10 @@ jar {
             it.replace('pom-default.xml', 'pom.xml')
         }
     }
+}
+
+bootJar {
+    enabled = false
 }
 
 task fatJar(type: Jar) {
@@ -96,9 +104,7 @@ artifacts {
 }
 
 test {
-    useJUnitPlatform {
-        includeEngines 'junit-vintage'
-    }
+    useJUnitPlatform()
     filter {
         includeTestsMatching 'com.joutvhu.dynamic.jpa.*'
     }
@@ -145,7 +151,7 @@ publishing {
                 withXml {
                     def dependenciesNode = asNode().appendNode('dependencies')
 
-                    configurations.compile.allDependencies.each {
+                    configurations.implementation.allDependencies.each {
                         def dependencyNode = dependenciesNode.appendNode('dependency')
                         dependencyNode.appendNode('groupId', it.group)
                         dependencyNode.appendNode('artifactId', it.name)

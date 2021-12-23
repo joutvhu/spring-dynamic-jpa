@@ -1,0 +1,56 @@
+# This workflow will build a package using Gradle and then publish it to GitHub packages when a release is created
+# For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#Publishing-using-gradle
+
+name: Gradle Package
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v2
+        with:
+          java-version: '8'
+          distribution: 'adopt'
+
+      - name: Write Secret Key Ring File
+        uses: joutvhu/write-file@v1
+        with:
+          path: secrets/secret-key.gpg
+          contents: ${{ secrets.GPG_SECRET_KEY_BASE64 }}
+          write_mode: overwrite
+          encoding: base64
+
+      - name: Write Gradle Properties File
+        uses: joutvhu/write-file@v1
+        with:
+          path: gradle.properties
+          contents: ${{ secrets.GRADLE_SECRET_PROPERTIES }}
+          write_mode: overwrite
+
+      - name: Build with Gradle
+        run: gradle clean build
+
+      - name: Get Current Release
+        id: get_current_release
+        uses: joutvhu/get-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to Sonatype Packages
+        run: gradle publishMavenPublicationToSonatypeRepository
+
+      - name: Publish to GitHub Packages
+        if: ${{ steps.get_current_release.outputs.prerelease == 'false' && steps.get_current_release.outputs.draft == 'false' }}
+        run: gradle publishMavenPublicationToGithubRepository
