@@ -10,7 +10,7 @@ plugins {
 }
 
 group = 'com.github.joutvhu'
-version = '2.3.5'
+version = '2.7.4-SNAPSHOT'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -55,13 +55,13 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-    testImplementation('org.springframework.boot:spring-boot-starter-test:2.6.7') {
+    testImplementation('org.springframework.boot:spring-boot-starter-test:2.7.0') {
         exclude group: 'junit', module: 'junit'
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
         exclude group: 'org.apache.logging.log4j', module: 'log4j-api'
         exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
     }
-    testImplementation 'org.apache.logging.log4j:log4j-to-slf4j:2.17.0'
+    testImplementation 'org.apache.logging.log4j:log4j-to-slf4j:2.17.2'
     testImplementation 'com.h2database:h2'
 }
 
@@ -72,7 +72,7 @@ jar {
     }
     into("META-INF/maven/${project.group}/${project.name}") {
         from {
-            generatePomFileForMavenJavaPublication
+            generatePomFileForMavenPublication
         }
         rename {
             it.replace('pom-default.xml', 'pom.xml')
