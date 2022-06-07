@@ -4,20 +4,20 @@ create table TABLE_A
 (
     FIELD_A         NUMBER        default 0                                                       not null,
     FIELD_B         NUMBER        default 0                                                       not null,
-    FIELD_C         CHAR(10 char) default ' '                                                     not null
+    FIELD_C         VARCHAR(10) default ' '                                                     not null
 );
 
 create table TABLE_B
 (
     FIELD_A         NUMBER        default 0                                                       not null,
     FIELD_D         NUMBER        default 0                                                       not null,
-    FIELD_E         CHAR(5 char)  default ' '                                                     not null
+    FIELD_E         VARCHAR(5)  default ' '                                                     not null
 );
 
 create table TABLE_C
 (
     FIELD_A         NUMBER        default 0                                                       not null,
-    FIELD_B         CHAR(10 char) default ' '                                                    not null,
+    FIELD_B         VARCHAR(10) default ' '                                                    not null,
     FIELD_C         NUMBER        default 0                                                       not null
 );
 
