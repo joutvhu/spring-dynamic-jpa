@@ -15,12 +15,17 @@ public class DynamicBasedStringQuery extends ExpressionBasedStringQuery {
      * @param query    must not be {@literal null} or empty.
      * @param metadata must not be {@literal null}.
      * @param parser   must not be {@literal null}.
+     * @param nativeQuery   must not be {@literal null}.
      */
-    public DynamicBasedStringQuery(String query, JpaEntityMetadata<?> metadata, SpelExpressionParser parser) {
-        super(query, metadata, parser);
+    public DynamicBasedStringQuery(String query, JpaEntityMetadata<?> metadata, SpelExpressionParser parser, boolean nativeQuery) {
+        super(query, metadata, parser, nativeQuery);
     }
 
     public DynamicBasedStringQuery(DeclaredQuery query, JpaEntityMetadata<?> metadata, SpelExpressionParser parser) {
-        this(query.getQueryString(), metadata, parser);
+        this(query.getQueryString(), metadata, parser, false);
+    }
+
+    public DynamicBasedStringQuery(DeclaredQuery query, JpaEntityMetadata<?> metadata, SpelExpressionParser parser, boolean nativeQuery) {
+        this(query.getQueryString(), metadata, parser, nativeQuery);
     }
 }

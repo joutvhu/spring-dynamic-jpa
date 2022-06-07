@@ -7,14 +7,14 @@ The Spring Dynamic JPA will make it easy to implement dynamic queries with JpaRe
 - Add dependency
 
 ```groovy
-implementation 'com.github.joutvhu:spring-dynamic-jpa:2.3.4'
+implementation 'com.github.joutvhu:spring-dynamic-jpa:2.7.4'
 ```
 
 ```xml
 <dependency>
     <groupId>com.github.joutvhu</groupId>
     <artifactId>spring-dynamic-jpa</artifactId>
-    <version>2.3.4</version>
+    <version>2.7.4</version>
 </dependency>
 ```
 
@@ -26,6 +26,7 @@ implementation 'com.github.joutvhu:spring-dynamic-jpa:2.3.4'
 | 2.1.x.RELEASE | 2.1.4 |
 | 2.2.x.RELEASE | 2.2.4 |
 | 2.3.x.RELEASE | 2.3.4 |
+| 2.7.x | 2.7.4 |
 
 - To use the dynamic query, you need to set the jpa repository's `repositoryFactoryBeanClass` property to `DynamicJpaRepositoryFactoryBean.class`.
 

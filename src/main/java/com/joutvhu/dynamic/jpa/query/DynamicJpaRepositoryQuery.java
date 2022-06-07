@@ -75,7 +75,7 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
         if (query == null || this.accessor != accessor) {
             this.accessor = accessor;
             String queryString = buildQuery(method.getQueryTemplate(), accessor);
-            query = new DynamicBasedStringQuery(queryString, method.getEntityInformation(), PARSER);
+            query = new DynamicBasedStringQuery(queryString, method.getEntityInformation(), PARSER, method.isNativeQuery());
             parameterBinder = Lazy.of(createBinder());
 
             validateQuery();
@@ -105,7 +105,7 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
 
         countQuery = new DynamicBasedStringQuery(
                 query.deriveCountQuery(countQueryString, countProjectionString),
-                method.getEntityInformation(), PARSER);
+                method.getEntityInformation(), PARSER, method.isNativeQuery());
 
         if (!method.isNativeQuery() && method.isPageQuery())
             validateQuery(countQuery.getQueryString(), "Count query validation failed for method %s!");
