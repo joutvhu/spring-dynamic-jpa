@@ -10,7 +10,7 @@ plugins {
 }
 
 group = 'com.github.joutvhu'
-version = '2.7.4-SNAPSHOT'
+version = '2.7.4'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 

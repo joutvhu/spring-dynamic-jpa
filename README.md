@@ -26,7 +26,7 @@ implementation 'com.github.joutvhu:spring-dynamic-jpa:2.7.4'
 | 2.1.x.RELEASE | 2.1.4 |
 | 2.2.x.RELEASE | 2.2.4 |
 | 2.3.x.RELEASE | 2.3.4 |
-| 2.7.x.RELEASE | 2.7.4 |
+| 2.7.x | 2.7.4 |
 
 - To use the dynamic query, you need to set the jpa repository's `repositoryFactoryBeanClass` property to `DynamicJpaRepositoryFactoryBean.class`.
 
