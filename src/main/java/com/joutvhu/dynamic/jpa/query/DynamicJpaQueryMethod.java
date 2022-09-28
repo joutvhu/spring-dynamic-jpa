@@ -1,9 +1,9 @@
 package com.joutvhu.dynamic.jpa.query;
 
+import com.joutvhu.dynamic.commons.DynamicQueryTemplates;
+import com.joutvhu.dynamic.commons.util.ApplicationContextHolder;
+import com.joutvhu.dynamic.commons.util.TemplateConfiguration;
 import com.joutvhu.dynamic.jpa.DynamicQuery;
-import com.joutvhu.dynamic.jpa.DynamicQueryTemplates;
-import com.joutvhu.dynamic.jpa.util.ApplicationContextHolder;
-import com.joutvhu.dynamic.jpa.util.TemplateConfiguration;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.springframework.core.annotation.AnnotatedElementUtils;
