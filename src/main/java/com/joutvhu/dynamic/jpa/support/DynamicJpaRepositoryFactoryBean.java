@@ -1,6 +1,6 @@
 package com.joutvhu.dynamic.jpa.support;
 
-import com.joutvhu.dynamic.jpa.util.ApplicationContextHolder;
+import com.joutvhu.dynamic.commons.util.ApplicationContextHolder;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;

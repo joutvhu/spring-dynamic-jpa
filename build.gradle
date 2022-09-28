@@ -6,11 +6,11 @@ plugins {
     id 'java-library'
     id 'maven-publish'
     id 'org.springframework.boot' version '2.0.0.RELEASE'
-    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.14.RELEASE'
 }
 
 group = 'com.github.joutvhu'
-version = '2.0.4'
+version = '2.0.5'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -25,30 +25,66 @@ repositories {
     mavenCentral()
 }
 
+ext {
+    versions = [
+            'spring-boot.version'           : '2.0.5.RELEASE',
+            'spring-framework.version'      : '5.0.4.RELEASE',
+            'spring-dynamic-commons.version': '1.0.0',
+            'javax-transaction.version'     : '1.3',
+            'javax-persistence.version'     : '2.2',
+            'hibernate.version'             : '5.2.14.Final',
+            'freemarker.version'            : '2.3.31',
+            'commons-lang3.version'         : '3.12.0'
+    ]
+    managedVersions = [
+            'org.springframework:spring-aspects'          : 'spring-framework.version',
+            'org.springframework:spring-context'          : 'spring-framework.version',
+            'org.springframework:spring-jcl'              : 'spring-framework.version',
+            'org.springframework:spring-context-support'  : 'spring-framework.version',
+            'org.springframework.data:spring-data-commons': 'spring-boot.version',
+            'org.springframework.data:spring-data-jpa'    : 'spring-boot.version',
+            'com.github.joutvhu:spring-dynamic-commons'   : 'spring-dynamic-commons.version',
+            'javax.transaction:javax.transaction-api'     : 'javax-transaction.version',
+            'javax.persistence:javax.persistence-api'     : 'javax-persistence.version',
+            'org.hibernate:hibernate-core'                : 'hibernate.version',
+            'org.freemarker:freemarker'                   : 'freemarker.version',
+            'org.apache.commons:commons-lang3'            : 'commons-lang3.version'
+    ]
+    otherVersions = [
+            'org.springframework.boot:spring-boot-dependencies': 'spring-boot.version'
+    ]
+}
+
+dependencyManagement {
+    dependencies {
+        ext.managedVersions.each {
+            dependency "${it.key}:${ext.versions[it.value]}"
+        }
+    }
+}
+
 dependencies {
-    implementation 'org.springframework:spring-aspects:5.0.4.RELEASE'
-    implementation 'org.springframework:spring-context:5.0.4.RELEASE'
-    implementation 'org.springframework:spring-context-support:5.0.4.RELEASE'
+    implementation 'org.springframework:spring-aspects'
+    implementation 'org.springframework:spring-context'
+    implementation 'org.springframework:spring-context-support'
 
-    implementation 'org.springframework.data:spring-data-jpa:2.0.5.RELEASE'
-    implementation 'org.springframework.data:spring-data-commons:2.0.5.RELEASE'
+    implementation 'org.springframework.data:spring-data-jpa'
+    implementation 'org.springframework.data:spring-data-commons'
 
-    implementation 'javax.persistence:javax.persistence-api:2.2'
-    implementation 'javax.transaction:javax.transaction-api:1.3'
+    implementation 'com.github.joutvhu:spring-dynamic-commons'
 
-    implementation('org.hibernate:hibernate-core:5.2.14.Final') {
+    implementation 'javax.persistence:javax.persistence-api'
+    implementation 'javax.transaction:javax.transaction-api'
+
+    implementation('org.hibernate:hibernate-core') {
         exclude group: 'javax.activation', module: 'javax.activation-api'
         exclude group: 'javax.persistence', module: 'javax.persistence-api'
         exclude group: 'javax.xml.bind', module: 'jaxb-api'
         exclude group: 'org.jboss.spec.javax.transaction', module: 'jboss-transaction-api_1.2_spec'
     }
 
-    annotationProcessor 'org.projectlombok:lombok:1.18.12'
-    implementation 'org.projectlombok:lombok:1.18.12'
-
-    implementation 'org.freemarker:freemarker:2.3.30'
-    implementation 'org.apache.commons:commons-lang3:3.11'
-    implementation 'org.apache.logging.log4j:log4j-api:2.17.0'
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
 
     testImplementation(platform('org.junit:junit-bom:5.8.2'))
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
@@ -61,8 +97,10 @@ dependencies {
         exclude group: 'org.apache.logging.log4j', module: 'log4j-api'
         exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
     }
-    testImplementation 'org.apache.logging.log4j:log4j-to-slf4j:2.17.0'
     testImplementation 'com.h2database:h2'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.24'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
 }
 
 jar {
@@ -148,9 +186,21 @@ publishing {
                     name = 'Giao Ho'
                     url = 'https://github.com/joutvhu'
                 }
+                properties = project.ext.versions
                 withXml {
-                    def dependenciesNode = asNode().appendNode('dependencies')
+                    def dependencyManagement = asNode().get('dependencyManagement')
+                    dependencyManagement.dependencies.dependency.each {
+                        def key = "${it.groupId.text()}:${it.artifactId.text()}"
+                        def versionProperty = project.ext.managedVersions[key]
+                        if (versionProperty == null) {
+                            versionProperty = project.ext.otherVersions[key]
+                        }
+                        if (versionProperty) {
+                            it.version[0].setValue("\${$versionProperty}")
+                        }
+                    }
 
+                    def dependenciesNode = asNode().appendNode('dependencies')
                     configurations.implementation.allDependencies.each {
                         def dependencyNode = dependenciesNode.appendNode('dependency')
                         dependencyNode.appendNode('groupId', it.group)
