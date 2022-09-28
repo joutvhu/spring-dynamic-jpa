@@ -1,5 +1,6 @@
 package com.joutvhu.dynamic.jpa;
 
+import com.joutvhu.dynamic.commons.DynamicQueryTemplates;
 import com.joutvhu.dynamic.jpa.support.DynamicJpaRepositoryFactoryBean;
 import org.hibernate.cfg.AvailableSettings;
 import org.springframework.beans.factory.annotation.Qualifier;

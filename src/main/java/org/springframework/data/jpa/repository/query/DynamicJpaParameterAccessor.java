@@ -1,5 +1,6 @@
 package org.springframework.data.jpa.repository.query;
 
+import org.hibernate.jpa.TypedParameterValue;
 import org.springframework.data.repository.query.Parameters;
 
 import java.util.HashMap;
@@ -70,7 +71,12 @@ public class DynamicJpaParameterAccessor extends JpaParametersParameterAccessor 
         parameters.forEach(parameter -> {
             Object value = accessor.getValue(parameter);
             if (value != null && parameter.isBindable()) {
-                result.put(parameter.getName().orElse(null), value);
+                String key = parameter.getName().orElse(String.valueOf(parameter.getIndex()));
+                if (value instanceof TypedParameterValue) {
+                    result.put(key, ((TypedParameterValue) value).getValue());
+                } else {
+                    result.put(key, value);
+                }
             }
         });
         return result;
