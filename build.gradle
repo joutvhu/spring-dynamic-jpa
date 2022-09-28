@@ -31,7 +31,7 @@ ext {
             'spring-framework.version'      : '5.2.0.RELEASE',
             'spring-dynamic-commons.version': '1.0.0',
             'jakarta-transaction.version'   : '1.3.3',
-            'javax-persistence.version'     : '2.2.3',
+            'jakarta-persistence.version'   : '2.2.3',
             'hibernate.version'             : '5.4.6.Final',
             'freemarker.version'            : '2.3.31',
             'commons-lang3.version'         : '3.12.0'
@@ -45,7 +45,7 @@ ext {
             'org.springframework.data:spring-data-jpa'    : 'spring-boot.version',
             'com.github.joutvhu:spring-dynamic-commons'   : 'spring-dynamic-commons.version',
             'jakarta.transaction:jakarta.transaction-api' : 'jakarta-transaction.version',
-            'jakarta.persistence:jakarta.persistence-api' : 'javax-persistence.version',
+            'jakarta.persistence:jakarta.persistence-api' : 'jakarta-persistence.version',
             'org.hibernate:hibernate-core'                : 'hibernate.version',
             'org.freemarker:freemarker'                   : 'freemarker.version',
             'org.apache.commons:commons-lang3'            : 'commons-lang3.version'
