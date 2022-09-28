@@ -70,8 +70,13 @@ public class DynamicJpaParameterAccessor extends JpaParametersParameterAccessor 
         Parameters<?, ?> parameters = accessor.getParameters();
         parameters.forEach(parameter -> {
             Object value = accessor.getValue(parameter);
-            if (value != null && !(value instanceof TypedParameterValue) && parameter.isBindable()) {
-                result.put(parameter.getName().orElse(null), value);
+            if (value != null && parameter.isBindable()) {
+                String key = parameter.getName().orElse(String.valueOf(parameter.getIndex()));
+                if (value instanceof TypedParameterValue) {
+                    result.put(key, ((TypedParameterValue) value).getValue());
+                } else {
+                    result.put(key, value);
+                }
             }
         });
         return result;
