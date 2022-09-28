@@ -1,4 +1,4 @@
-# spring-dynamic-jpa
+# Spring Dynamic JPA
 
 The Spring Dynamic JPA will make it easy to implement dynamic queries with JpaRepository.
 
@@ -7,14 +7,14 @@ The Spring Dynamic JPA will make it easy to implement dynamic queries with JpaRe
 - Add dependency
 
 ```groovy
-implementation 'com.github.joutvhu:spring-dynamic-jpa:2.7.4'
+implementation 'com.github.joutvhu:spring-dynamic-jpa:2.7.5'
 ```
 
 ```xml
 <dependency>
     <groupId>com.github.joutvhu</groupId>
     <artifactId>spring-dynamic-jpa</artifactId>
-    <version>2.7.4</version>
+    <version>2.7.5</version>
 </dependency>
 ```
 
@@ -22,11 +22,11 @@ implementation 'com.github.joutvhu:spring-dynamic-jpa:2.7.4'
 
 | spring-boot version | spring-dynamic-jpa version |
 |:----------:|:-------------:|
-| 2.0.x.RELEASE | 2.0.4 |
-| 2.1.x.RELEASE | 2.1.4 |
-| 2.2.x.RELEASE | 2.2.4 |
-| 2.3.x.RELEASE | 2.3.4 |
-| 2.7.x | 2.7.4 |
+| 2.0.x.RELEASE | 2.0.5 |
+| 2.1.x.RELEASE | 2.1.5 |
+| 2.2.x.RELEASE | 2.2.5 |
+| 2.3.x.RELEASE | 2.3.5 |
+| 2.7.x | 2.7.5 |
 
 - To use the dynamic query, you need to set the jpa repository's `repositoryFactoryBeanClass` property to `DynamicJpaRepositoryFactoryBean.class`.
 
@@ -95,6 +95,8 @@ public DynamicQueryTemplates dynamicQueryTemplates() {
     return queryTemplates;
 }
 ```
+
+- Note: From version 2.x.5 `DynamicQueryTemplates` has been moved to package [spring-dynamic-commons](https://github.com/joutvhu/spring-dynamic-commons). Please change package to `com.joutvhu.dynamic.commons.DynamicQueryTemplates`, If you upgrade from old version.
 
 - Each template will start with a template name definition line. The template name definition line must be start with two dash characters (`--`). The template name will have the following syntax.
   
