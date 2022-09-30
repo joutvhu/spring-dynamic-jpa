@@ -96,7 +96,7 @@ public DynamicQueryTemplates dynamicQueryTemplates() {
 }
 ```
 
-- From version 2.x.5 `DynamicQueryTemplates` has been moved to package [spring-dynamic-commons](https://github.com/joutvhu/spring-dynamic-commons). Please change package to `com.joutvhu.dynamic.commons.DynamicQueryTemplates`, If you upgrade from old version.
+- From version 2.x.5 `DynamicQueryTemplates` has been moved to package [spring-dynamic-commons](https://github.com/joutvhu/spring-dynamic-commons). Change the package to `com.joutvhu.dynamic.commons.DynamicQueryTemplates`, If you upgrade from old version.
 
 - Each template will start with a template name definition line. The template name definition line must be start with two dash characters (`--`). The template name will have the following syntax.
   
