@@ -33,6 +33,7 @@ ext {
             'jakarta-persistence.version'   : '2.2.3',
             'hibernate.version'             : '5.6.9.Final',
             'freemarker.version'            : '2.3.31',
+            'handlebars.version'            : '4.3.1',
             'commons-lang3.version'         : '3.12.0'
     ]
     managedVersions = [
@@ -45,8 +46,9 @@ ext {
             'jakarta.transaction:jakarta.transaction-api' : 'jakarta-transaction.version',
             'jakarta.persistence:jakarta.persistence-api' : 'jakarta-persistence.version',
             'org.hibernate:hibernate-core'                : 'hibernate.version',
+            'org.apache.commons:commons-lang3'            : 'commons-lang3.version',
             'org.freemarker:freemarker'                   : 'freemarker.version',
-            'org.apache.commons:commons-lang3'            : 'commons-lang3.version'
+            'com.github.jknack:handlebars'                : 'handlebars.version'
     ]
     otherVersions = [
             'org.springframework.boot:spring-boot-dependencies': 'spring-boot.version'
@@ -73,6 +75,7 @@ dependencies {
     implementation 'jakarta.persistence:jakarta.persistence-api'
 
     implementation 'org.freemarker:freemarker'
+    implementation 'com.github.jknack:handlebars'
     implementation 'org.apache.commons:commons-lang3'
 
     implementation('org.hibernate:hibernate-core') {
