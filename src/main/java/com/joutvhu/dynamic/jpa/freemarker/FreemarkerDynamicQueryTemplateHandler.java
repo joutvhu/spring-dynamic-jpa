@@ -36,7 +36,6 @@ public class FreemarkerDynamicQueryTemplateHandler implements
     private final ConcurrentStringTemplateLoader sqlTemplateLoader = new ConcurrentStringTemplateLoader();
     private Configuration config = FreemarkerTemplateConfiguration.instanceWithDefault()
             .templateLoader(sqlTemplateLoader)
-            .withoutCache()
             .configuration();
 
     private String encoding = "UTF-8";

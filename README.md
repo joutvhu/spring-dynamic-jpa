@@ -225,19 +225,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
   </@trim>
   ```
 
-## Template Caching and Concurrency
-In order to make sure that using this library in any kind of environment, even highly concurrent ones has no 
-undesired effects, Freemarker template caching is disabled by default.
-
-Quoting Freemarker page: https://freemarker.apache.org/docs/pgui_misc_multithreading.html
-
-> In a multithreaded environment Configuration instances, Template instances and data-models should be handled as immutable (read-only) objects. That is, you create and initialize them (for example with set... methods), and then you don't modify them later (e.g. you don't call set...). This allows us to avoid expensive synchronized blocks in a multithreaded environment. Beware with Template instances; when you get a Template instance with Configuration.getTemplate, you may get an instance from the template cache that is already used by other threads, so do not call its set... methods (calling process is of course fine).
-> 
-> The above restrictions do not apply if you access all objects from the same single thread only.
-> 
-> It is impossible to modify the data-model object or a shared variable with FTL, unless you put methods (or other objects) into the data-model that do that. We discourage you from writing methods that modify the data-model object or the shared variables. Try to use variables that are stored in the environment object instead (this object is created for a single Template.process call to store the runtime state of processing), so you don't modify data that are possibly used by multiple threads. For more information read: Variables, scopes
-
-In order to enable Freemarker template caching you can just provide the required handler bean with the default configuration or define your own configuration with your specific caching needs:
+## Custom configuration
+You can provide your own configuration in the DynamicQueryTemplateHandler declaration:
 
 ```java
 @Bean
