@@ -31,7 +31,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 2.0.0
  */
 @NoArgsConstructor
-@Component
 public class HandlebarsDynamicQueryTemplateHandler implements
         DynamicQueryTemplateHandler<Template>, ResourceLoaderAware, InitializingBean {
 

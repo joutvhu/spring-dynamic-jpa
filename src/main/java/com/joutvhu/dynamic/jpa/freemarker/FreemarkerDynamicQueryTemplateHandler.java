@@ -28,7 +28,6 @@ import java.util.Map;
  * @since 1.0.0
  */
 @NoArgsConstructor
-@Component
 public class FreemarkerDynamicQueryTemplateHandler implements
         DynamicQueryTemplateHandler<Template>, ResourceLoaderAware, InitializingBean {
 
