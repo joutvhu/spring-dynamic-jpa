@@ -1,4 +1,4 @@
-package com.joutvhu.dynamic.commons.freemarker.directive;
+package com.joutvhu.dynamic.freemarker.directive;
 
 import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
@@ -21,7 +21,7 @@ import java.util.Map;
  * @since 1.0.0
  */
 public class WhereDirective implements TemplateDirectiveModel {
-    private static final TrimDirective.TrimSymbol symbols = new TrimDirective.TrimSymbol(
+    private static final TrimDirective.FreemarkerTrimSymbol symbols = new TrimDirective.FreemarkerTrimSymbol(
             "where", getOverrides(true, "and", "or"),
             null, getOverrides(false, "and", "or"));
 

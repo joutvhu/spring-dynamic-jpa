@@ -1,9 +1,8 @@
-package com.joutvhu.dynamic.commons.handlebars.helpers;
+package com.joutvhu.dynamic.handlebars.helpers;
 
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Helper;
 import com.github.jknack.handlebars.Options;
-import com.github.jknack.handlebars.helper.BlockHelper;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 
