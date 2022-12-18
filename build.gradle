@@ -29,7 +29,6 @@ ext {
     versions = [
             'spring-boot.version'           : '2.7.0',
             'spring-framework.version'      : '5.3.20',
-            'spring-dynamic-commons.version': '1.0.0',
             'jakarta-transaction.version'   : '1.3.3',
             'jakarta-persistence.version'   : '2.2.3',
             'hibernate.version'             : '5.6.9.Final',
@@ -43,7 +42,6 @@ ext {
             'org.springframework:spring-context-support'  : 'spring-framework.version',
             'org.springframework.data:spring-data-commons': 'spring-boot.version',
             'org.springframework.data:spring-data-jpa'    : 'spring-boot.version',
-            'com.github.joutvhu:spring-dynamic-commons'   : 'spring-dynamic-commons.version',
             'jakarta.transaction:jakarta.transaction-api' : 'jakarta-transaction.version',
             'jakarta.persistence:jakarta.persistence-api' : 'jakarta-persistence.version',
             'org.hibernate:hibernate-core'                : 'hibernate.version',
@@ -71,10 +69,11 @@ dependencies {
     implementation 'org.springframework.data:spring-data-jpa'
     implementation 'org.springframework.data:spring-data-commons'
 
-    implementation 'com.github.joutvhu:spring-dynamic-commons'
-
     implementation 'jakarta.transaction:jakarta.transaction-api'
     implementation 'jakarta.persistence:jakarta.persistence-api'
+
+    implementation 'org.freemarker:freemarker'
+    implementation 'org.apache.commons:commons-lang3'
 
     implementation('org.hibernate:hibernate-core') {
         exclude group: 'javax.activation', module: 'javax.activation-api'
