@@ -1,0 +1,31 @@
+--TableB:findB1
+select t from TableB t
+{{#if fieldE}}
+  {{#startsWith fieldE "H"}}
+    where t.fieldE = :fieldE
+  {{/startsWith}}
+{{/if}}
+
+--TableB:findB2
+select t from TableB t
+{{#maxD}}
+  where t.fieldD < :maxD
+{{/maxD}}
+
+--TableB:findB3
+select t from TableB t
+{{#maxD}}
+  where t.fieldD < :maxD
+{{/maxD}}
+
+--TableB:findB3.count
+select count(t) from TableB t
+{{#maxD}}
+  where t.fieldD < :maxD
+{{/maxD}}
+
+--TableB:sumB1
+select sum(FIELD_D) from TABLE_B
+{{#maxD}}
+  where FIELD_D < :maxD
+{{/maxD}}

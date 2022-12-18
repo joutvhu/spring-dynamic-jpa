@@ -1,4 +1,4 @@
-package com.joutvhu.dynamic.commons.freemarker;
+package com.joutvhu.dynamic.jpa.freemarker;
 
 import com.joutvhu.dynamic.commons.util.DynamicTemplateResolver;
 import com.joutvhu.dynamic.jpa.DynamicQueryTemplate;
@@ -48,7 +48,7 @@ public class FreemarkerDynamicQueryTemplateHandler implements
     private ResourceLoader resourceLoader;
 
     @Override
-    public DynamicQueryTemplate<Template> createTemplate(String name, String content) {
+    public DynamicQueryTemplate<Template> createTemplateWithString(String name, String content) {
         try {
             return new FreemarkerDynamicQueryTemplate(new Template(name, content, cfg));
         } catch (IOException e) {
@@ -58,7 +58,7 @@ public class FreemarkerDynamicQueryTemplateHandler implements
     }
 
     @Override
-    public DynamicQueryTemplate<Template> findTemplate(String name) {
+    public DynamicQueryTemplate<Template> findTemplateFile(String name) {
         try {
             Template template = cfg.getTemplate(name, encoding);
             return new FreemarkerDynamicQueryTemplate(template);

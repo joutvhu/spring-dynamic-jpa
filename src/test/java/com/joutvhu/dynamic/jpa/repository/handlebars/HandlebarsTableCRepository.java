@@ -1,4 +1,4 @@
-package com.joutvhu.dynamic.jpa.repository;
+package com.joutvhu.dynamic.jpa.repository.handlebars;
 
 import com.joutvhu.dynamic.jpa.DynamicQuery;
 import com.joutvhu.dynamic.jpa.entity.TableC;
@@ -8,18 +8,18 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface TableCRepository extends JpaRepository<TableC, Long> {
+public interface HandlebarsTableCRepository extends JpaRepository<TableC, Long> {
     @DynamicQuery("select i from TableC i\n" +
-            "<@where>\n" +
-            "   <#if fieldA??>\n" +
+            "{{#where}}\n" +
+            "   {{#if fieldA}}\n" +
             "       i.fieldA = :fieldA\n" +
-            "   </#if>\n" +
-            "   <#if fieldB??>\n" +
+            "   {{/if}}\n" +
+            "   {{#if fieldB}}\n" +
             "       and i.fieldB like concat('%',:fieldB,'%')\n" +
-            "   </#if>\n" +
-            "   <#if fieldCs??>\n" +
+            "   {{/if}}\n" +
+            "   {{#if fieldCs}}\n" +
             "       and i.fieldC in :fieldCs\n" +
-            "   </#if>\n" +
-            "</@where>")
+            "   {{/if}}\n" +
+            "{{/where}}")
     Page<TableC> search(Long fieldA, String fieldB, List<Long> fieldCs, Pageable pageable);
 }

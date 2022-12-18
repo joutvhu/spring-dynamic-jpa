@@ -1,4 +1,4 @@
-package com.joutvhu.dynamic.commons.freemarker;
+package com.joutvhu.dynamic.jpa.freemarker;
 
 import com.joutvhu.dynamic.jpa.DynamicQueryTemplate;
 import freemarker.template.Template;

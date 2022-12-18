@@ -1,4 +1,4 @@
-package com.joutvhu.dynamic.commons.freemarker.directive;
+package com.joutvhu.dynamic.jpa.freemarker.directive;
 
 import freemarker.core.Environment;
 import freemarker.ext.beans.InvalidPropertyException;
@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
 public class TrimDirective implements TemplateDirectiveModel {
     @Override
     public void execute(Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateException, IOException {
-        TrimSymbol symbols = new TrimSymbol(params);
+        FreemarkerTrimSymbol symbols = new FreemarkerTrimSymbol(params);
         if (body != null)
             TrimWriter.of(env.getOut(), symbols).render(body);
     }
@@ -42,14 +42,14 @@ public class TrimDirective implements TemplateDirectiveModel {
      */
     public static class TrimWriter extends Writer {
         private final Writer out;
-        private final TrimSymbol symbols;
+        private final FreemarkerTrimSymbol symbols;
         private final StringBuilder contentBuilder = new StringBuilder();
 
-        public static TrimWriter of(Writer out, TrimSymbol symbols) {
+        public static TrimWriter of(Writer out, FreemarkerTrimSymbol symbols) {
             return new TrimWriter(out, symbols);
         }
 
-        public TrimWriter(Writer out, TrimSymbol symbols) {
+        public TrimWriter(Writer out, FreemarkerTrimSymbol symbols) {
             this.out = out;
             this.symbols = symbols;
         }
@@ -110,13 +110,13 @@ public class TrimDirective implements TemplateDirectiveModel {
     @Getter
     @Setter
     @AllArgsConstructor
-    public static class TrimSymbol {
+    public static class FreemarkerTrimSymbol {
         private String prefix;
         private List<String> prefixOverrides;
         private String suffix;
         private List<String> suffixOverrides;
 
-        public TrimSymbol(String prefix, String suffix, String... overrides) {
+        public FreemarkerTrimSymbol(String prefix, String suffix, String... overrides) {
             this.prefix = prefix;
             this.suffix = suffix;
 
@@ -132,7 +132,7 @@ public class TrimDirective implements TemplateDirectiveModel {
          * @param params map
          * @throws TemplateException if invalid params
          */
-        public TrimSymbol(Map<String, Object> params) throws TemplateException {
+        public FreemarkerTrimSymbol(Map<String, Object> params) throws TemplateException {
             this.prefix = getStringParam(params, "prefix");
             this.prefixOverrides = getListParam(params, "prefixOverrides");
             this.suffix = getStringParam(params, "suffix");

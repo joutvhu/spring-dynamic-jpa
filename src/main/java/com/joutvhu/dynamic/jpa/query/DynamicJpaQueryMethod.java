@@ -56,14 +56,14 @@ public class DynamicJpaQueryMethod extends JpaQueryMethod {
                 .of(() -> getMergedOrDefaultAnnotationValue("nativeQuery", DynamicQuery.class, Boolean.class));
     }
 
-    protected DynamicQueryTemplate findTemplate(String name) {
+    protected DynamicQueryTemplate findTemplateFile(String name) {
         DynamicQueryTemplateProvider provider = getTemplateProvider();
-        return provider != null ? provider.findTemplate(name) : null;
+        return provider != null ? provider.findTemplateFile(name) : null;
     }
 
-    protected DynamicQueryTemplate createTemplate(String name, String query) {
+    protected DynamicQueryTemplate createTemplateWithString(String name, String query) {
         DynamicQueryTemplateProvider provider = getTemplateProvider();
-        return provider.createTemplate(name, query);
+        return provider.createTemplateWithString(name, query);
     }
 
 
@@ -72,7 +72,7 @@ public class DynamicJpaQueryMethod extends JpaQueryMethod {
         if (StringUtils.hasText(templateName)) templateName = "." + templateName;
         templateName = getTemplateKey() + templateName;
         String query = getMergedOrDefaultAnnotationValue(name, DynamicQuery.class, String.class);
-        queryTemplate = StringUtils.hasText(query) ? createTemplate(templateName, query) : findTemplate(templateName);
+        queryTemplate = StringUtils.hasText(query) ? createTemplateWithString(templateName, query) : findTemplateFile(templateName);
         return queryTemplate;
     }
 
