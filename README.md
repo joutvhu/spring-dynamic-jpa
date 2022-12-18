@@ -84,19 +84,18 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 ### Load query template files
 
-- You need to configure a `DynamicQueryTemplates` bean to be loadable external query templates.
+- You need to configure a `DynamicQueryTemplateHandler` bean to be loadable external query templates.
 
 ```java
 @Bean
-public DynamicQueryTemplates dynamicQueryTemplates() {
-    DynamicQueryTemplates queryTemplates = new DynamicQueryTemplates();
-    queryTemplates.setTemplateLocation("classpath:/query");
-    queryTemplates.setSuffix(".dsql");
-    return queryTemplates;
+public DynamicQueryTemplateHandler dynamicQueryTemplateHandler() {
+    DynamicQueryTemplateHandler handler = new DynamicQueryTemplateHandler();
+    handler.setTemplateLocation("classpath:/query");
+    handler.setSuffix(".dsql");
+    return handler;
 }
 ```
 
-- From version 2.x.5 `DynamicQueryTemplates` has been moved to package [spring-dynamic-commons](https://github.com/joutvhu/spring-dynamic-commons). Change the package to `com.joutvhu.dynamic.commons.DynamicQueryTemplates`, If you upgrade from old version.
 
 - Each template will start with a template name definition line. The template name definition line must be start with two dash characters (`--`). The template name will have the following syntax.
   
@@ -225,3 +224,28 @@ public interface UserRepository extends JpaRepository<User, Long> {
   ...
   </@trim>
   ```
+
+## Template Caching and Concurrency
+In order to make sure that using this library in any kind of environment, even highly concurrent ones has no 
+undesired effects, Freemarker template caching is disabled by default.
+
+Quoting Freemarker page: https://freemarker.apache.org/docs/pgui_misc_multithreading.html
+
+> In a multithreaded environment Configuration instances, Template instances and data-models should be handled as immutable (read-only) objects. That is, you create and initialize them (for example with set... methods), and then you don't modify them later (e.g. you don't call set...). This allows us to avoid expensive synchronized blocks in a multithreaded environment. Beware with Template instances; when you get a Template instance with Configuration.getTemplate, you may get an instance from the template cache that is already used by other threads, so do not call its set... methods (calling process is of course fine).
+> 
+> The above restrictions do not apply if you access all objects from the same single thread only.
+> 
+> It is impossible to modify the data-model object or a shared variable with FTL, unless you put methods (or other objects) into the data-model that do that. We discourage you from writing methods that modify the data-model object or the shared variables. Try to use variables that are stored in the environment object instead (this object is created for a single Template.process call to store the runtime state of processing), so you don't modify data that are possibly used by multiple threads. For more information read: Variables, scopes
+
+In order to enable Freemarker template caching you can just provide the required handler bean with the default configuration or define your own configuration with your specific caching needs:
+
+```java
+@Bean
+public DynamicQueryTemplateHandler dynamicQueryTemplateHandler() {
+    DynamicQueryTemplateHandler handler = new DynamicQueryTemplateHandler();
+    handler.setConfiguration(FreemarkerTemplateConfiguration.instanceWithDefault().configuration());
+    handler.setTemplateLocation("classpath:/query");
+    handler.setSuffix(".dsql");
+    return handler;
+}
+```
