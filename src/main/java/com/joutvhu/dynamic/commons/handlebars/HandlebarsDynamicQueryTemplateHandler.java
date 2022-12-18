@@ -2,7 +2,6 @@ package com.joutvhu.dynamic.commons.handlebars;
 
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
-import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import com.github.jknack.handlebars.io.TemplateSource;
 import com.joutvhu.dynamic.commons.util.DynamicTemplateResolver;
@@ -40,33 +39,33 @@ public class HandlebarsDynamicQueryTemplateHandler implements
 
     private static final Log log = LogFactory.getLog(HandlebarsDynamicQueryTemplateHandler.class);
 
-    private static final Map<String, DynamicQueryTemplate<Template>> cache = new ConcurrentHashMap<>();
-    private static final TemplateLoader sqlTemplateLoader = new ClassPathTemplateLoader();
-    private static final Handlebars handlebars = new Handlebars(sqlTemplateLoader);
+    private static final Map<String, String> contentCache = new ConcurrentHashMap<>();
+    private static final Map<String, DynamicQueryTemplate<Template>> templateCache = new ConcurrentHashMap<>();
+
+    private static final HandlebarsTemplateConfiguration config = HandlebarsTemplateConfiguration.instanceWithDefault();
+    private static final Handlebars handlebars = config.handlebars();
 
     private String encoding = "UTF-8";
     private String templateLocation = "classpath:/query";
     private String suffix = ".dsql";
     private ResourceLoader resourceLoader;
 
+
+    //created via content
     @Override
     public DynamicQueryTemplate<Template> createTemplate(String name, String content) {
         try {
-            Template template = handlebars.compile(name);
-            HandlebarsDynamicQueryTemplate dynamicTemplate
-                    = new HandlebarsDynamicQueryTemplate(template);
-
-            cache.put(name, dynamicTemplate);
-            return dynamicTemplate;
+            return loadTemplateContent(name, content);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
     }
 
+    // loaded via file
     @Override
     public DynamicQueryTemplate<Template> findTemplate(String name) {
-        return cache.computeIfAbsent(name, template -> this.createTemplate(template, null));
+        return templateCache.get(name);
     }
 
     @Override
@@ -112,7 +111,8 @@ public class HandlebarsDynamicQueryTemplateHandler implements
 
     @Override
     @SneakyThrows
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet()  {
+        TemplateLoader sqlTemplateLoader = config.templateLoader();
         sqlTemplateLoader.setPrefix(this.templateLocation);
         sqlTemplateLoader.setSuffix(this.suffix);
         sqlTemplateLoader.setCharset(Charset.forName(this.encoding));
@@ -128,11 +128,23 @@ public class HandlebarsDynamicQueryTemplateHandler implements
 
         for (Resource resource : resources) {
             DynamicTemplateResolver.of(resource).encoding(encoding).load((templateName, content) -> {
-                TemplateSource src = sqlTemplateLoader.sourceAt(templateName);
+                String fileName = resource.getFilename();
+                String fileNameExtensionless = fileName.substring(0, fileName.lastIndexOf("."));
+                TemplateSource src = sqlTemplateLoader.sourceAt(fileNameExtensionless);
+                loadTemplateContent(templateName, content);
                 if (src == null) {
-                    log.error("Failed loading template: " + templateName);
+                    log.error("Failed loading template: " + resource.getFilename());
                 }
             });
         }
+    }
+
+    private HandlebarsDynamicQueryTemplate loadTemplateContent(
+            String templateName, String content) throws IOException {
+        Template template = handlebars.compileInline(content);
+        HandlebarsDynamicQueryTemplate dynamicTemplate
+                = new HandlebarsDynamicQueryTemplate(template);
+        templateCache.put(templateName, dynamicTemplate);
+        return dynamicTemplate;
     }
 }

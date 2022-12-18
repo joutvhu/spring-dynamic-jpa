@@ -1,11 +1,13 @@
 package com.joutvhu.dynamic.jpa;
 
 import com.joutvhu.dynamic.commons.freemarker.FreemarkerDynamicQueryTemplateHandler;
+import com.joutvhu.dynamic.commons.handlebars.HandlebarsDynamicQueryTemplateHandler;
 import com.joutvhu.dynamic.jpa.support.DynamicJpaRepositoryFactoryBean;
 import org.hibernate.cfg.AvailableSettings;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.ClassPathResource;
@@ -33,6 +35,9 @@ import java.util.Properties;
         repositoryFactoryBeanClass = DynamicJpaRepositoryFactoryBean.class
 )
 public class JpaDynamicApplication {
+
+    public static final String PROPERTY_DYNAMIC_JPA_TEMPLATE = "dynamic.jpa.template";
+
     public static void main(String[] args) {
         SpringApplication.run(JpaDynamicApplication.class);
     }
@@ -82,9 +87,20 @@ public class JpaDynamicApplication {
     }
 
     @Bean
-    public DynamicQueryTemplateHandler dynamicQueryTemplates() {
+    @ConditionalOnProperty(name = PROPERTY_DYNAMIC_JPA_TEMPLATE, havingValue = "freemarker")
+    public DynamicQueryTemplateHandler freemarkerDynamicQueryTemplateHandler() {
         FreemarkerDynamicQueryTemplateHandler templateHandler = new FreemarkerDynamicQueryTemplateHandler();
         templateHandler.setSuffix(".dsql");
+        templateHandler.setTemplateLocation("/query/freemarker");
+        return templateHandler;
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = PROPERTY_DYNAMIC_JPA_TEMPLATE, havingValue = "handlebars")
+    public DynamicQueryTemplateHandler handlebarsDynamicQueryTemplateHandler() {
+        HandlebarsDynamicQueryTemplateHandler templateHandler = new HandlebarsDynamicQueryTemplateHandler();
+        templateHandler.setSuffix(".dsql");
+        templateHandler.setTemplateLocation("/query/handlebars");
         return templateHandler;
     }
 }

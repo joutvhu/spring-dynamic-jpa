@@ -1,4 +1,4 @@
-package com.joutvhu.dynamic.jpa.repository;
+package com.joutvhu.dynamic.jpa.repository.freemarker;
 
 import com.joutvhu.dynamic.jpa.DynamicQuery;
 import com.joutvhu.dynamic.jpa.entity.TableB;
@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface TableBRepository extends JpaRepository<TableB, Long> {
+public interface FreemarkerTableBRepository extends JpaRepository<TableB, Long> {
     @DynamicQuery
     List<TableB> findB1(String fieldE);
 

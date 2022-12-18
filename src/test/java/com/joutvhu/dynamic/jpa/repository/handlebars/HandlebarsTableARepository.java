@@ -1,4 +1,4 @@
-package com.joutvhu.dynamic.jpa.repository;
+package com.joutvhu.dynamic.jpa.repository.handlebars;
 
 import com.joutvhu.dynamic.jpa.DynamicQuery;
 import com.joutvhu.dynamic.jpa.entity.TableA;
@@ -8,11 +8,11 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface TableARepository extends JpaRepository<TableA, Long> {
+public interface HandlebarsTableARepository extends JpaRepository<TableA, Long> {
     @DynamicQuery(value = "select t from TableA t where t.fieldB = :fieldB\n" +
-            "<#if fieldC?has_content>\n" +
+            "{{#if fieldC}}\n" +
             "  and t.fieldC = :fieldC\n" +
-            "</#if>"
+            "{{/if}}"
     )
     List<TableA> findA1(Long fieldB, String fieldC);
 
@@ -21,12 +21,12 @@ public interface TableARepository extends JpaRepository<TableA, Long> {
 
     @DynamicQuery(value = "select new com.joutvhu.dynamic.jpa.model.TableAB(a, b) from TableA a inner join TableB b\n" +
             "on a.fieldA = b.fieldA\n" +
-            "<#if fieldB??>\n" +
+            "{{#fieldB}}\n" +
             "  and a.fieldB = :fieldB\n" +
-            "</#if>" +
-            "<#if fieldD??>\n" +
+            "{{/fieldB}}" +
+            "{{#fieldD}}\n" +
             "  and b.fieldD = :fieldD\n" +
-            "</#if>"
+            "{{/fieldD}}"
     )
     List<TableAB> findJ(Long fieldB, Long fieldD);
 }

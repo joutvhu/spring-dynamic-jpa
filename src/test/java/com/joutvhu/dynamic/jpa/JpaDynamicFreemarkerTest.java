@@ -5,9 +5,9 @@ import com.joutvhu.dynamic.jpa.entity.TableB;
 import com.joutvhu.dynamic.jpa.entity.TableC;
 import com.joutvhu.dynamic.jpa.model.ModelC;
 import com.joutvhu.dynamic.jpa.model.TableAB;
-import com.joutvhu.dynamic.jpa.repository.TableARepository;
-import com.joutvhu.dynamic.jpa.repository.TableBRepository;
-import com.joutvhu.dynamic.jpa.repository.TableCRepository;
+import com.joutvhu.dynamic.jpa.repository.freemarker.FreemarkerTableARepository;
+import com.joutvhu.dynamic.jpa.repository.freemarker.FreemarkerTableBRepository;
+import com.joutvhu.dynamic.jpa.repository.freemarker.FreemarkerTableCRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,15 +24,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = JpaDynamicApplication.class)
+@SpringBootTest(classes = JpaDynamicApplication.class, properties = "dynamic.jpa.template=freemarker")
 @Transactional
-public class JpaDynamicApplicationTest {
+public class JpaDynamicFreemarkerTest {
+
     @Autowired
-    private TableARepository tableARepository;
+    private FreemarkerTableARepository tableARepository;
+
     @Autowired
-    private TableBRepository tableBRepository;
+    private FreemarkerTableBRepository tableBRepository;
+
     @Autowired
-    private TableCRepository tableCRepository;
+    private FreemarkerTableCRepository tableCRepository;
 
     @Test
     public void findA1() {
