@@ -1,12 +1,11 @@
-package com.joutvhu.dynamic.commons.handlebars;
+package com.joutvhu.dynamic.freemarker;
 
-import com.github.jknack.handlebars.Handlebars;
-import com.github.jknack.handlebars.Template;
-import com.github.jknack.handlebars.io.TemplateLoader;
-import com.github.jknack.handlebars.io.TemplateSource;
 import com.joutvhu.dynamic.commons.util.DynamicTemplateResolver;
 import com.joutvhu.dynamic.jpa.DynamicQueryTemplate;
 import com.joutvhu.dynamic.jpa.DynamicQueryTemplateHandler;
+import freemarker.cache.StringTemplateLoader;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
@@ -18,61 +17,63 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * HandlebarsDynamicQueryTemplateHandler
+ * DynamicQueryTemplates
  *
- * @author Jean Sossmeier
- * @since 2.0.0
+ * @author Giao Ho
+ * @since 1.0.0
  */
 @NoArgsConstructor
 @Component
-public class HandlebarsDynamicQueryTemplateHandler implements
+public class FreemarkerDynamicQueryTemplateHandler implements
         DynamicQueryTemplateHandler<Template>,
         ResourceLoaderAware,
         InitializingBean {
 
-    private static final Log log = LogFactory.getLog(HandlebarsDynamicQueryTemplateHandler.class);
+    private static final Log log = LogFactory.getLog(FreemarkerDynamicQueryTemplateHandler.class);
 
-    private static final Map<String, String> contentCache = new ConcurrentHashMap<>();
-    private static final Map<String, DynamicQueryTemplate<Template>> templateCache = new ConcurrentHashMap<>();
-
-    private static final HandlebarsTemplateConfiguration config = HandlebarsTemplateConfiguration.instanceWithDefault();
-    private static final Handlebars handlebars = config.handlebars();
+    private static StringTemplateLoader sqlTemplateLoader = new StringTemplateLoader();
+    private static Configuration cfg = FreemarkerTemplateConfiguration.instanceWithDefault()
+            .templateLoader(sqlTemplateLoader)
+            .configuration();
 
     private String encoding = "UTF-8";
     private String templateLocation = "classpath:/query";
     private String suffix = ".dsql";
     private ResourceLoader resourceLoader;
 
-
-    //created via content
     @Override
-    public DynamicQueryTemplate<Template> createTemplate(String name, String content) {
+    public DynamicQueryTemplate<Template> createTemplateWithString(String name, String content) {
         try {
-            return loadTemplateContent(name, content);
+            return new FreemarkerDynamicQueryTemplate(new Template(name, content, cfg));
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    // loaded via file
     @Override
-    public DynamicQueryTemplate<Template> findTemplate(String name) {
-        return templateCache.get(name);
+    public DynamicQueryTemplate<Template> findTemplateFile(String name) {
+        try {
+            Template template = cfg.getTemplate(name, encoding);
+            return new FreemarkerDynamicQueryTemplate(template);
+        } catch (IOException e) {
+            log.error("Failed finding template: " + name, e);
+            return null;
+        }
     }
 
     @Override
     @SneakyThrows
     public String processTemplate(DynamicQueryTemplate<Template> template, Map<String, Object> params) {
-        return template.getTemplate().apply(params);
+        return FreeMarkerTemplateUtils.processTemplateIntoString(template.getTemplate(), params);
     }
+
 
     /**
      * Setup encoding for the process of reading the query template files.
@@ -110,13 +111,7 @@ public class HandlebarsDynamicQueryTemplateHandler implements
     }
 
     @Override
-    @SneakyThrows
-    public void afterPropertiesSet()  {
-        TemplateLoader sqlTemplateLoader = config.templateLoader();
-        sqlTemplateLoader.setPrefix(this.templateLocation);
-        sqlTemplateLoader.setSuffix(this.suffix);
-        sqlTemplateLoader.setCharset(Charset.forName(this.encoding));
-
+    public void afterPropertiesSet() throws Exception {
         String pattern;
         if (StringUtils.isNotBlank(templateLocation))
             pattern = templateLocation.contains(suffix) ? templateLocation : templateLocation + "/**/*" + suffix;
@@ -128,23 +123,11 @@ public class HandlebarsDynamicQueryTemplateHandler implements
 
         for (Resource resource : resources) {
             DynamicTemplateResolver.of(resource).encoding(encoding).load((templateName, content) -> {
-                String fileName = resource.getFilename();
-                String fileNameExtensionless = fileName.substring(0, fileName.lastIndexOf("."));
-                TemplateSource src = sqlTemplateLoader.sourceAt(fileNameExtensionless);
-                loadTemplateContent(templateName, content);
-                if (src == null) {
-                    log.error("Failed loading template: " + resource.getFilename());
-                }
+                Object src = sqlTemplateLoader.findTemplateSource(templateName);
+                if (src != null)
+                    log.warn("Found duplicate template key, will replace the value, key: " + templateName);
+                sqlTemplateLoader.putTemplate(templateName, content);
             });
         }
-    }
-
-    private HandlebarsDynamicQueryTemplate loadTemplateContent(
-            String templateName, String content) throws IOException {
-        Template template = handlebars.compileInline(content);
-        HandlebarsDynamicQueryTemplate dynamicTemplate
-                = new HandlebarsDynamicQueryTemplate(template);
-        templateCache.put(templateName, dynamicTemplate);
-        return dynamicTemplate;
     }
 }

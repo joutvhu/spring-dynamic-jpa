@@ -1,13 +1,14 @@
-package com.joutvhu.dynamic.jpa;
+package com.joutvhu.dynamic.freemarker;
 
+import com.joutvhu.dynamic.jpa.JpaDynamicApplication;
 import com.joutvhu.dynamic.jpa.entity.TableA;
 import com.joutvhu.dynamic.jpa.entity.TableB;
 import com.joutvhu.dynamic.jpa.entity.TableC;
 import com.joutvhu.dynamic.jpa.model.ModelC;
 import com.joutvhu.dynamic.jpa.model.TableAB;
-import com.joutvhu.dynamic.jpa.repository.handlebars.HandlebarsTableARepository;
-import com.joutvhu.dynamic.jpa.repository.handlebars.HandlebarsTableBRepository;
-import com.joutvhu.dynamic.jpa.repository.handlebars.HandlebarsTableCRepository;
+import com.joutvhu.dynamic.jpa.repository.freemarker.FreemarkerTableARepository;
+import com.joutvhu.dynamic.jpa.repository.freemarker.FreemarkerTableBRepository;
+import com.joutvhu.dynamic.jpa.repository.freemarker.FreemarkerTableCRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,18 +25,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = JpaDynamicApplication.class, properties = "dynamic.jpa.template=handlebars")
+@SpringBootTest(classes = JpaDynamicApplication.class, properties = "dynamic.jpa.template=freemarker")
 @Transactional
-public class JpaDynamicHandlebarsTest {
+public class JpaDynamicFreemarkerTest {
 
     @Autowired
-    private HandlebarsTableARepository tableARepository;
+    private FreemarkerTableARepository tableARepository;
 
     @Autowired
-    private HandlebarsTableBRepository tableBRepository;
+    private FreemarkerTableBRepository tableBRepository;
 
     @Autowired
-    private HandlebarsTableCRepository tableCRepository;
+    private FreemarkerTableCRepository tableCRepository;
 
     @Test
     public void findA1() {
@@ -152,7 +153,6 @@ public class JpaDynamicHandlebarsTest {
         c.add(101L);
         c.add(104L);
         c.add(410L);
-
         Page<TableC> result = tableCRepository.search(null, "T", c,
                 PageRequest.of(0, 2, Sort.by("fieldA")));
         Assertions.assertEquals(2, result.getTotalPages());

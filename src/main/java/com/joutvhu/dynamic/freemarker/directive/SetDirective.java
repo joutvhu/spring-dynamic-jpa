@@ -1,4 +1,4 @@
-package com.joutvhu.dynamic.commons.freemarker.directive;
+package com.joutvhu.dynamic.freemarker.directive;
 
 import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
@@ -19,7 +19,7 @@ import java.util.Map;
  * @since 1.0.0
  */
 public class SetDirective implements TemplateDirectiveModel {
-    private static final TrimDirective.TrimSymbol symbols = new TrimDirective.TrimSymbol("set", null, ",");
+    private static final TrimDirective.FreemarkerTrimSymbol symbols = new TrimDirective.FreemarkerTrimSymbol("set", null, ",");
 
     @Override
     public void execute(Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateException, IOException {
