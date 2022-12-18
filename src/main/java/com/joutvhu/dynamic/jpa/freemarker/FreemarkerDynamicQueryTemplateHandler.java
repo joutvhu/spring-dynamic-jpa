@@ -60,7 +60,6 @@ public class FreemarkerDynamicQueryTemplateHandler implements
             Template template = config.getTemplate(name, encoding);
             return new FreemarkerDynamicQueryTemplate(template);
         } catch (IOException e) {
-            log.error("Failed finding template: " + name, e);
             return null;
         }
     }
