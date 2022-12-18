@@ -3,6 +3,7 @@ package com.joutvhu.dynamic.jpa.freemarker;
 import com.joutvhu.dynamic.jpa.freemarker.directive.SetDirective;
 import com.joutvhu.dynamic.jpa.freemarker.directive.TrimDirective;
 import com.joutvhu.dynamic.jpa.freemarker.directive.WhereDirective;
+import freemarker.cache.NullCacheStorage;
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 
@@ -34,6 +35,13 @@ public class FreemarkerTemplateConfiguration {
         cfg.setSharedVariable("trim", new TrimDirective());
         cfg.setSharedVariable("set", new SetDirective());
         cfg.setSharedVariable("where", new WhereDirective());
+
+        return this;
+    }
+
+    public FreemarkerTemplateConfiguration withoutCache() {
+        cfg.setCacheStorage(NullCacheStorage.INSTANCE);
+        cfg.setTemplateUpdateDelayMilliseconds(0);
 
         return this;
     }

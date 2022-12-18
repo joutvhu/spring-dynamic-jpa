@@ -3,7 +3,6 @@ package com.joutvhu.dynamic.jpa.freemarker;
 import com.joutvhu.dynamic.commons.util.DynamicTemplateResolver;
 import com.joutvhu.dynamic.jpa.DynamicQueryTemplate;
 import com.joutvhu.dynamic.jpa.DynamicQueryTemplateHandler;
-import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import lombok.NoArgsConstructor;
@@ -29,17 +28,15 @@ import java.util.Map;
  * @since 1.0.0
  */
 @NoArgsConstructor
-@Component
 public class FreemarkerDynamicQueryTemplateHandler implements
-        DynamicQueryTemplateHandler<Template>,
-        ResourceLoaderAware,
-        InitializingBean {
+        DynamicQueryTemplateHandler<Template>, ResourceLoaderAware, InitializingBean {
 
     private static final Log log = LogFactory.getLog(FreemarkerDynamicQueryTemplateHandler.class);
 
-    private static StringTemplateLoader sqlTemplateLoader = new StringTemplateLoader();
-    private static Configuration cfg = FreemarkerTemplateConfiguration.instanceWithDefault()
+    private final ConcurrentStringTemplateLoader sqlTemplateLoader = new ConcurrentStringTemplateLoader();
+    private Configuration config = FreemarkerTemplateConfiguration.instanceWithDefault()
             .templateLoader(sqlTemplateLoader)
+            .withoutCache()
             .configuration();
 
     private String encoding = "UTF-8";
@@ -50,7 +47,7 @@ public class FreemarkerDynamicQueryTemplateHandler implements
     @Override
     public DynamicQueryTemplate<Template> createTemplateWithString(String name, String content) {
         try {
-            return new FreemarkerDynamicQueryTemplate(new Template(name, content, cfg));
+            return new FreemarkerDynamicQueryTemplate(new Template(name, content, config));
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -60,7 +57,7 @@ public class FreemarkerDynamicQueryTemplateHandler implements
     @Override
     public DynamicQueryTemplate<Template> findTemplateFile(String name) {
         try {
-            Template template = cfg.getTemplate(name, encoding);
+            Template template = config.getTemplate(name, encoding);
             return new FreemarkerDynamicQueryTemplate(template);
         } catch (IOException e) {
             log.error("Failed finding template: " + name, e);
@@ -74,6 +71,14 @@ public class FreemarkerDynamicQueryTemplateHandler implements
         return FreeMarkerTemplateUtils.processTemplateIntoString(template.getTemplate(), params);
     }
 
+    /**
+     * Setup a custom freemarker custom configuration
+     *
+     * @param configuration to replace the default FreemarkerTemplateConfiguration that uses an StringTemplateLoader
+     */
+    public void setConfiguration(Configuration configuration) {
+        this.config = configuration;
+    }
 
     /**
      * Setup encoding for the process of reading the query template files.
