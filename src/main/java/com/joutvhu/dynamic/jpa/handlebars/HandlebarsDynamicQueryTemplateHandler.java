@@ -3,7 +3,6 @@ package com.joutvhu.dynamic.jpa.handlebars;
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.TemplateLoader;
-import com.github.jknack.handlebars.io.TemplateSource;
 import com.joutvhu.dynamic.commons.util.DynamicTemplateResolver;
 import com.joutvhu.dynamic.jpa.DynamicQueryTemplate;
 import com.joutvhu.dynamic.jpa.DynamicQueryTemplateHandler;
@@ -115,7 +114,7 @@ public class HandlebarsDynamicQueryTemplateHandler implements
 
         for (Resource resource : resources) {
             DynamicTemplateResolver.of(resource).encoding(encoding).load((templateName, content) -> {
-                loadTemplate(resource, templateName, content);
+                loadTemplateContent(templateName, content);
             });
         }
     }
@@ -134,16 +133,6 @@ public class HandlebarsDynamicQueryTemplateHandler implements
         sqlTemplateLoader.setSuffix(this.suffix);
         sqlTemplateLoader.setCharset(Charset.forName(this.encoding));
         return sqlTemplateLoader;
-    }
-    private void loadTemplate(Resource resource, String templateName, String content) throws IOException {
-        TemplateLoader sqlTemplateLoader = config.templateLoader();
-        String fileName = resource.getFilename();
-        String fileNameExtensionless = fileName.substring(0, fileName.lastIndexOf("."));
-        TemplateSource src = sqlTemplateLoader.sourceAt(fileNameExtensionless);
-        loadTemplateContent(templateName, content);
-        if (src == null) {
-            log.error("Failed loading template: " + resource.getFilename());
-        }
     }
 
     private HandlebarsDynamicQueryTemplate loadTemplateContent(String templateName, String content) throws IOException {
