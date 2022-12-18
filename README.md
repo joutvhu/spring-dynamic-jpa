@@ -1,3 +1,9 @@
+A fork to the great `joutvhu/spring-dynamic-jpa` project, will push every change made here to the main project in case the owner agrees with the changes.
+Some additions made were:
+- Single dependency
+- Main abstraction that enables multi-template support
+- Freemarker and also a new Handlerbars templating support. 
+
 # Spring Dynamic JPA
 
 The Spring Dynamic JPA will make it easy to implement dynamic queries with JpaRepository.
