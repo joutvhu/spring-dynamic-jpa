@@ -1,6 +1,7 @@
 
-package com.joutvhu.dynamic.freemarker;
+package com.joutvhu.dynamic.jpa.freemarker;
 
+import com.joutvhu.dynamic.jpa.freemarker.FreemarkerTemplateConfiguration;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;

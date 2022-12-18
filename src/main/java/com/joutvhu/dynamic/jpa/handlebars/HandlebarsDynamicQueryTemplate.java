@@ -1,4 +1,4 @@
-package com.joutvhu.dynamic.handlebars;
+package com.joutvhu.dynamic.jpa.handlebars;
 
 import com.github.jknack.handlebars.Template;
 import com.joutvhu.dynamic.jpa.DynamicQueryTemplate;

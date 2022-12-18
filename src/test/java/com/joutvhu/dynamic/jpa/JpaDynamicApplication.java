@@ -1,7 +1,7 @@
 package com.joutvhu.dynamic.jpa;
 
-import com.joutvhu.dynamic.freemarker.FreemarkerDynamicQueryTemplateHandler;
-import com.joutvhu.dynamic.handlebars.HandlebarsDynamicQueryTemplateHandler;
+import com.joutvhu.dynamic.jpa.freemarker.FreemarkerDynamicQueryTemplateHandler;
+import com.joutvhu.dynamic.jpa.handlebars.HandlebarsDynamicQueryTemplateHandler;
 import com.joutvhu.dynamic.jpa.support.DynamicJpaRepositoryFactoryBean;
 import org.hibernate.cfg.AvailableSettings;
 import org.springframework.beans.factory.annotation.Qualifier;

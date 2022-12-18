@@ -146,7 +146,7 @@ artifacts {
 test {
     useJUnitPlatform()
     filter {
-        includeTestsMatching 'com.joutvhu.dynamic.*'
+        includeTestsMatching 'com.joutvhu.dynamic.jpa.*'
     }
 }
 

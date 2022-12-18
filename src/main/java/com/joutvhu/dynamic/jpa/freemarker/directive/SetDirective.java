@@ -1,4 +1,4 @@
-package com.joutvhu.dynamic.freemarker.directive;
+package com.joutvhu.dynamic.jpa.freemarker.directive;
 
 import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;

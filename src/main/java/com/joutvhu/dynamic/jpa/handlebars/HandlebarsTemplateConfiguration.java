@@ -1,11 +1,11 @@
-package com.joutvhu.dynamic.handlebars;
+package com.joutvhu.dynamic.jpa.handlebars;
 
 
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
-import com.joutvhu.dynamic.handlebars.helpers.CustomDirectiveHelpers;
-import com.joutvhu.dynamic.handlebars.helpers.CustomStringHelpers;
+import com.joutvhu.dynamic.jpa.handlebars.helpers.CustomDirectiveHelpers;
+import com.joutvhu.dynamic.jpa.handlebars.helpers.CustomStringHelpers;
 
 /**
  * HandlebarsTemplateConfiguration

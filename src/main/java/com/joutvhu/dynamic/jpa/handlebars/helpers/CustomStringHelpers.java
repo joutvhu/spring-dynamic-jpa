@@ -1,10 +1,8 @@
-package com.joutvhu.dynamic.handlebars.helpers;
+package com.joutvhu.dynamic.jpa.handlebars.helpers;
 
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Helper;
 import com.github.jknack.handlebars.Options;
-import com.joutvhu.dynamic.commons.util.TrimProcessor;
-import com.joutvhu.dynamic.commons.util.TrimSymbol;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 
@@ -13,20 +11,23 @@ import java.io.IOException;
 import static org.apache.commons.lang3.Validate.notNull;
 
 @NoArgsConstructor
-public enum CustomDirectiveHelpers implements Helper<Object> {
+public enum CustomStringHelpers implements Helper<Object> {
 
-    where {
-        private final TrimProcessor processor = new TrimProcessor();
-        private final TrimSymbol symbols = new TrimSymbol(
-                "where", TrimSymbol.getOverrides(true, "and", "or"),
-                null, TrimSymbol.getOverrides(false, "and", "or")
-        );
-
+    startsWith {
         @Override
         @SneakyThrows
         protected CharSequence safeApply(final Object value, final Options options) {
-            CharSequence content = options.fn();
-            return processor.process(symbols, content.toString());
+            boolean result = value.toString().startsWith(options.param(0));
+            return result ? options.fn() : options.inverse();
+        }
+    },
+
+    endsWith {
+        @Override
+        @SneakyThrows
+        protected CharSequence safeApply(final Object value, final Options options) {
+            boolean result = value.toString().endsWith(options.param(0));
+            return result ? options.fn() : options.inverse();
         }
     };
 
@@ -65,8 +66,8 @@ public enum CustomDirectiveHelpers implements Helper<Object> {
      */
     public static void register(final Handlebars handlebars) {
         notNull(handlebars, "A handlebars object is required.");
-        CustomDirectiveHelpers[] helpers = values();
-        for (CustomDirectiveHelpers helper : helpers) {
+        CustomStringHelpers[] helpers = values();
+        for (CustomStringHelpers helper : helpers) {
             helper.registerHelper(handlebars);
         }
     }
