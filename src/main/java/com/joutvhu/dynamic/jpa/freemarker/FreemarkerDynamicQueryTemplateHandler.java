@@ -3,6 +3,7 @@ package com.joutvhu.dynamic.jpa.freemarker;
 import com.joutvhu.dynamic.commons.util.DynamicTemplateResolver;
 import com.joutvhu.dynamic.jpa.DynamicQueryTemplate;
 import com.joutvhu.dynamic.jpa.DynamicQueryTemplateHandler;
+import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,6 @@ import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.stereotype.Component;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import java.io.IOException;
@@ -33,7 +33,7 @@ public class FreemarkerDynamicQueryTemplateHandler implements
 
     private static final Log log = LogFactory.getLog(FreemarkerDynamicQueryTemplateHandler.class);
 
-    private final ConcurrentStringTemplateLoader sqlTemplateLoader = new ConcurrentStringTemplateLoader();
+    private final StringTemplateLoader sqlTemplateLoader = new StringTemplateLoader();
     private Configuration config = FreemarkerTemplateConfiguration.instanceWithDefault()
             .templateLoader(sqlTemplateLoader)
             .configuration();
