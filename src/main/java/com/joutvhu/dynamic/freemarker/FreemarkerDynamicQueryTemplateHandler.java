@@ -1,8 +1,8 @@
-package com.joutvhu.dynamic.commons.freemarker;
+package com.joutvhu.dynamic.freemarker;
 
 import com.joutvhu.dynamic.commons.util.DynamicTemplateResolver;
-import com.joutvhu.dynamic.jpa.DynamicQueryTemplate;
-import com.joutvhu.dynamic.jpa.DynamicQueryTemplateHandler;
+import com.joutvhu.dynamic.commons.DynamicQueryTemplate;
+import com.joutvhu.dynamic.commons.DynamicQueryTemplateHandler;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -16,7 +16,6 @@ import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.stereotype.Component;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import java.io.IOException;

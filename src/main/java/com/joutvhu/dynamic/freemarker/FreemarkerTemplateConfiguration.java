@@ -1,8 +1,8 @@
-package com.joutvhu.dynamic.commons.freemarker;
+package com.joutvhu.dynamic.freemarker;
 
-import com.joutvhu.dynamic.commons.freemarker.directive.SetDirective;
-import com.joutvhu.dynamic.commons.freemarker.directive.TrimDirective;
-import com.joutvhu.dynamic.commons.freemarker.directive.WhereDirective;
+import com.joutvhu.dynamic.freemarker.directive.SetDirective;
+import com.joutvhu.dynamic.freemarker.directive.TrimDirective;
+import com.joutvhu.dynamic.freemarker.directive.WhereDirective;
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 

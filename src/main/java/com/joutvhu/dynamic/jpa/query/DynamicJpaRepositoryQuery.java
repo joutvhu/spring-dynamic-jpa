@@ -1,7 +1,7 @@
 package com.joutvhu.dynamic.jpa.query;
 
-import com.joutvhu.dynamic.jpa.DynamicQueryTemplate;
-import com.joutvhu.dynamic.jpa.DynamicQueryTemplateProcessor;
+import com.joutvhu.dynamic.commons.DynamicQueryTemplate;
+import com.joutvhu.dynamic.commons.DynamicQueryTemplateProcessor;
 import com.joutvhu.dynamic.commons.util.ApplicationContextHolder;
 import org.springframework.data.jpa.repository.query.*;
 import org.springframework.data.repository.query.*;
