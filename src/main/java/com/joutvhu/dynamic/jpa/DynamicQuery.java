@@ -1,6 +1,7 @@
 package com.joutvhu.dynamic.jpa;
 
 import org.springframework.data.annotation.QueryAnnotation;
+import org.springframework.data.jpa.repository.QueryRewriter;
 
 import java.lang.annotation.*;
 
@@ -43,4 +44,11 @@ public @interface DynamicQuery {
      * @return true if the query is native
      */
     boolean nativeQuery() default false;
+
+    /**
+     * Define a {@link QueryRewriter} that should be applied to the query string after the query is fully assembled.
+     *
+     * @since 3.0
+     */
+    Class<? extends QueryRewriter> queryRewriter() default QueryRewriter.IdentityQueryRewriter.class;
 }

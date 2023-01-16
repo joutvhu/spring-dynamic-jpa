@@ -29,6 +29,7 @@ public class DynamicJpaQueryLookupStrategy implements QueryLookupStrategy {
     private QueryExtractor extractor;
     private QueryLookupStrategy jpaQueryLookupStrategy;
     private QueryMethodEvaluationContextProvider evaluationContextProvider;
+    private QueryRewriterProvider queryRewriterProvider;
 
     public DynamicJpaQueryLookupStrategy(EntityManager entityManager, @Nullable Key key, QueryExtractor extractor,
                                          QueryMethodEvaluationContextProvider evaluationContextProvider,
@@ -38,13 +39,15 @@ public class DynamicJpaQueryLookupStrategy implements QueryLookupStrategy {
         this.extractor = extractor;
         this.entityManager = entityManager;
         this.evaluationContextProvider = evaluationContextProvider;
+        this.queryRewriterProvider = queryRewriterProvider;
     }
 
     @Override
     public RepositoryQuery resolveQuery(Method method, RepositoryMetadata metadata, ProjectionFactory factory, NamedQueries namedQueries) {
         if (isMethodDynamicJpaHandle(method)) {
             DynamicJpaQueryMethod queryMethod = new DynamicJpaQueryMethod(method, metadata, factory, extractor);
-            return new DynamicJpaRepositoryQuery(queryMethod, entityManager, evaluationContextProvider);
+            return new DynamicJpaRepositoryQuery(queryMethod, entityManager,
+                    queryRewriterProvider.getQueryRewriter(queryMethod), evaluationContextProvider);
         } else return jpaQueryLookupStrategy.resolveQuery(method, metadata, factory, namedQueries);
     }
 

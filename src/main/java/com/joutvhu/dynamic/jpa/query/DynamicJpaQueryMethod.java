@@ -7,6 +7,8 @@ import com.joutvhu.dynamic.commons.util.ApplicationContextHolder;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.jpa.provider.QueryExtractor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryRewriter;
 import org.springframework.data.jpa.repository.query.JpaQueryMethod;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.repository.core.RepositoryMetadata;
@@ -121,5 +123,10 @@ public class DynamicJpaQueryMethod extends JpaQueryMethod {
         if (annotation == null)
             return targetType.cast(AnnotationUtils.getDefaultValue(annotationType, attribute));
         return targetType.cast(AnnotationUtils.getValue(annotation, attribute));
+    }
+
+    @Override
+    public Class<? extends QueryRewriter> getQueryRewriter() {
+        return getMergedOrDefaultAnnotationValue("queryRewriter", DynamicQuery.class, Class.class);
     }
 }
