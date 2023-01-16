@@ -1,13 +1,12 @@
 package com.joutvhu.dynamic.jpa.query;
 
+import com.joutvhu.dynamic.commons.DynamicQueryTemplate;
 import com.joutvhu.dynamic.jpa.DynamicQuery;
-import freemarker.template.Template;
 import org.springframework.data.jpa.repository.query.*;
 import org.springframework.data.repository.query.*;
 import org.springframework.data.util.Lazy;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.lang.Nullable;
-import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -47,12 +46,11 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
         this.evaluationContextProvider = evaluationContextProvider;
     }
 
-    protected String buildQuery(Template template, DynamicJpaParameterAccessor accessor) {
+    protected String buildQuery(DynamicQueryTemplate template, DynamicJpaParameterAccessor accessor) {
         try {
             if (template != null) {
                 Map<String, Object> model = accessor.getParamModel();
-                String queryString = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
-                queryString = queryString
+                String queryString = template.process(model)
                         .replaceAll("\n", " ")
                         .replaceAll("\t", " ")
                         .replaceAll(" +", " ")
