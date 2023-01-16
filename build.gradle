@@ -12,6 +12,8 @@ plugins {
 group = 'com.github.joutvhu'
 version = '3.0.6'
 
+def snapshotVersion = version.endsWith('-SNAPSHOT') || version.endsWith('.SNAPSHOT')
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -92,6 +94,11 @@ jar {
     enabled = true
     manifest {
         attributes 'Built-By': 'joutvhu (Giao Ho)'
+        attributes 'Build-Date': java.time.Instant.now().toString()
+        attributes 'Bundle-Name': 'Spring Dynamic JPA'
+        attributes 'Bundle-Vendor': project.group
+        attributes 'Bundle-SymbolicName': project.name
+        attributes 'Bundle-Version': project.version
     }
     into("META-INF/maven/${project.group}/${project.name}") {
         from {
@@ -201,7 +208,7 @@ publishing {
     repositories {
         maven {
             name = 'sonatype'
-            if (version.endsWith('-SNAPSHOT') || version.endsWith('.SNAPSHOT')) {
+            if (snapshotVersion) {
                 url = 'https://oss.sonatype.org/content/repositories/snapshots'
             } else {
                 url = 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
@@ -224,4 +231,8 @@ publishing {
 
 signing {
     sign publishing.publications.maven
+}
+
+tasks.publishMavenPublicationToGithubRepository.configure {
+    onlyIf { !snapshotVersion }
 }
