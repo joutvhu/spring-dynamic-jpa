@@ -1,11 +1,9 @@
 package com.joutvhu.dynamic.jpa.query;
 
-import com.joutvhu.dynamic.commons.DynamicQueryTemplates;
-import com.joutvhu.dynamic.commons.util.ApplicationContextHolder;
-import com.joutvhu.dynamic.commons.util.TemplateConfiguration;
 import com.joutvhu.dynamic.jpa.DynamicQuery;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
+import com.joutvhu.dynamic.commons.DynamicQueryTemplate;
+import com.joutvhu.dynamic.commons.DynamicQueryTemplateProvider;
+import com.joutvhu.dynamic.commons.util.ApplicationContextHolder;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.jpa.provider.QueryExtractor;
@@ -16,7 +14,6 @@ import org.springframework.data.util.Lazy;
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -30,14 +27,13 @@ import java.util.Map;
  */
 public class DynamicJpaQueryMethod extends JpaQueryMethod {
     private static final Map<String, String> templateMap = new HashMap<>();
-    private static Configuration cfg = TemplateConfiguration.instanceWithDefault().configuration();
 
     private final Method method;
     private final Lazy<Boolean> isNativeQuery;
 
-    private Template queryTemplate;
-    private Template countQueryTemplate;
-    private Template countProjectionTemplate;
+    private DynamicQueryTemplate queryTemplate;
+    private DynamicQueryTemplate countQueryTemplate;
+    private DynamicQueryTemplate countProjectionTemplate;
 
     static {
         templateMap.put("value", "");
@@ -60,21 +56,18 @@ public class DynamicJpaQueryMethod extends JpaQueryMethod {
                 .of(() -> getMergedOrDefaultAnnotationValue("nativeQuery", DynamicQuery.class, Boolean.class));
     }
 
-    protected Template findTemplate(String name) {
-        DynamicQueryTemplates queryTemplates = ApplicationContextHolder.getBean(DynamicQueryTemplates.class);
-        return queryTemplates != null ? queryTemplates.findTemplate(name) : null;
+    protected DynamicQueryTemplate findTemplate(String name) {
+        DynamicQueryTemplateProvider provider = getTemplateProvider();
+        return provider != null ? provider.findTemplate(name) : null;
     }
 
-    protected Template createTemplate(String name, String content) {
-        try {
-            return new Template(name, content, cfg);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
+    protected DynamicQueryTemplate createTemplate(String name, String query) {
+        DynamicQueryTemplateProvider provider = getTemplateProvider();
+        return provider.createTemplate(name, query);
     }
 
-    protected Template getTemplate(String name) {
+
+    protected DynamicQueryTemplate getTemplate(String name) {
         String templateName = templateMap.get(name);
         if (StringUtils.hasText(templateName)) templateName = "." + templateName;
         templateName = getTemplateKey() + templateName;
@@ -88,24 +81,29 @@ public class DynamicJpaQueryMethod extends JpaQueryMethod {
     }
 
     @Nullable
-    public Template getQueryTemplate() {
+    public DynamicQueryTemplate getQueryTemplate() {
         if (queryTemplate == null)
             queryTemplate = getTemplate("value");
         return queryTemplate;
     }
 
     @Nullable
-    public Template getCountQueryTemplate() {
+    public DynamicQueryTemplate getCountQueryTemplate() {
         if (countQueryTemplate == null)
             countQueryTemplate = getTemplate("countQuery");
         return countQueryTemplate;
     }
 
     @Nullable
-    public Template getCountProjectionTemplate() {
+    public DynamicQueryTemplate getCountProjectionTemplate() {
         if (countProjectionTemplate == null)
             countProjectionTemplate = getTemplate("countProjection");
         return countProjectionTemplate;
+    }
+
+
+    private DynamicQueryTemplateProvider getTemplateProvider() {
+        return ApplicationContextHolder.getBean(DynamicQueryTemplateProvider.class);
     }
 
     private String getEntityName() {
