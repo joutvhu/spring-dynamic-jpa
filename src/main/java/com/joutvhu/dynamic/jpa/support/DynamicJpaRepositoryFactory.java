@@ -2,7 +2,6 @@ package com.joutvhu.dynamic.jpa.support;
 
 import com.joutvhu.dynamic.jpa.query.DynamicJpaQueryLookupStrategy;
 import jakarta.persistence.EntityManager;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.jpa.provider.PersistenceProvider;
 import org.springframework.data.jpa.provider.QueryExtractor;
 import org.springframework.data.jpa.repository.query.EscapeCharacter;
@@ -10,7 +9,6 @@ import org.springframework.data.jpa.repository.query.QueryRewriterProvider;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 import org.springframework.data.repository.query.QueryLookupStrategy;
 import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
-import org.springframework.util.Assert;
 
 import java.util.Optional;
 
