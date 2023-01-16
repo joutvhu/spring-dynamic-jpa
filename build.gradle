@@ -14,6 +14,8 @@ version = '2.7.6'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+def snapshotVersion = version.endsWith('-SNAPSHOT') || version.endsWith('.SNAPSHOT')
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -30,8 +32,6 @@ ext {
             'spring-boot.version'           : '2.7.0',
             'spring-framework.version'      : '5.3.20',
             'spring-dynamic-commons.version': '2.0.0',
-            'jakarta-transaction.version'   : '1.3.3',
-            'jakarta-persistence.version'   : '2.2.3',
             'hibernate.version'             : '5.6.9.Final',
             'commons-lang3.version'         : '3.12.0'
     ]
@@ -43,8 +43,6 @@ ext {
             'org.springframework.data:spring-data-commons': 'spring-boot.version',
             'org.springframework.data:spring-data-jpa'    : 'spring-boot.version',
             'com.github.joutvhu:spring-dynamic-commons'   : 'spring-dynamic-commons.version',
-            'jakarta.transaction:jakarta.transaction-api' : 'jakarta-transaction.version',
-            'jakarta.persistence:jakarta.persistence-api' : 'jakarta-persistence.version',
             'org.hibernate:hibernate-core'                : 'hibernate.version',
             'org.apache.commons:commons-lang3'            : 'commons-lang3.version'
     ]
@@ -71,15 +69,7 @@ dependencies {
 
     implementation 'com.github.joutvhu:spring-dynamic-commons'
 
-    implementation 'jakarta.transaction:jakarta.transaction-api'
-    implementation 'jakarta.persistence:jakarta.persistence-api'
-
-    implementation('org.hibernate:hibernate-core') {
-        exclude group: 'javax.activation', module: 'javax.activation-api'
-        exclude group: 'javax.persistence', module: 'javax.persistence-api'
-        exclude group: 'javax.xml.bind', module: 'jaxb-api'
-        exclude group: 'org.jboss.spec.javax.transaction', module: 'jboss-transaction-api_1.2_spec'
-    }
+    implementation 'org.hibernate:hibernate-core'
 
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
@@ -106,6 +96,11 @@ jar {
     enabled = true
     manifest {
         attributes 'Built-By': 'joutvhu (Giao Ho)'
+        attributes 'Build-Date': java.time.Instant.now().toString()
+        attributes 'Bundle-Name': 'Spring Dynamic JPA'
+        attributes 'Bundle-Vendor': project.group
+        attributes 'Bundle-SymbolicName': project.name
+        attributes 'Bundle-Version': project.version
     }
     into("META-INF/maven/${project.group}/${project.name}") {
         from {
@@ -215,7 +210,7 @@ publishing {
     repositories {
         maven {
             name = 'sonatype'
-            if (version.endsWith('-SNAPSHOT') || version.endsWith('.SNAPSHOT')) {
+            if (snapshotVersion) {
                 url = 'https://oss.sonatype.org/content/repositories/snapshots'
             } else {
                 url = 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
@@ -238,4 +233,8 @@ publishing {
 
 signing {
     sign publishing.publications.maven
+}
+
+tasks.publishMavenPublicationToGithubRepository.configure {
+    onlyIf { !snapshotVersion }
 }
