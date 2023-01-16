@@ -1,13 +1,13 @@
 package com.joutvhu.dynamic.jpa.query;
 
-import com.joutvhu.dynamic.jpa.DynamicQuery;
-import freemarker.template.Template;
+import com.joutvhu.dynamic.commons.DynamicQueryTemplate;
+import com.joutvhu.dynamic.commons.DynamicQueryTemplateProcessor;
+import com.joutvhu.dynamic.commons.util.ApplicationContextHolder;
 import org.springframework.data.jpa.repository.query.*;
 import org.springframework.data.repository.query.*;
 import org.springframework.data.util.Lazy;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.lang.Nullable;
-import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -47,16 +47,18 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
         this.evaluationContextProvider = evaluationContextProvider;
     }
 
-    protected String buildQuery(Template template, JpaParametersParameterAccessor accessor) {
+    protected String buildQuery(DynamicQueryTemplate template, JpaParametersParameterAccessor accessor) {
         try {
             if (template != null) {
+                DynamicQueryTemplateProcessor processor = ApplicationContextHolder.getBean(DynamicQueryTemplateProcessor.class);
                 Map<String, Object> model = DynamicJpaParameterAccessor.of(accessor).getParamModel();
-                String queryString = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
-                queryString = queryString
+                String queryString = processor.processTemplate(template, model)
                         .replaceAll("\n", " ")
                         .replaceAll("\t", " ")
                         .replaceAll(" +", " ")
+                        .replaceAll("::", " \\\\:\\\\: ") // postgres cast escaping for hibernate column::text
                         .trim();
+
                 return queryString.isEmpty() ? null : queryString;
             }
         } catch (Exception e) {
