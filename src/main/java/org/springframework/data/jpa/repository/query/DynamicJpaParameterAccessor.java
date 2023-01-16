@@ -1,6 +1,6 @@
 package org.springframework.data.jpa.repository.query;
 
-import org.hibernate.jpa.TypedParameterValue;
+import org.hibernate.query.TypedParameterValue;
 import org.springframework.data.repository.query.Parameters;
 
 import java.util.HashMap;

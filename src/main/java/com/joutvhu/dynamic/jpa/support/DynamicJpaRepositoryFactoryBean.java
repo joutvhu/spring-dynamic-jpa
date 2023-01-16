@@ -1,6 +1,7 @@
 package com.joutvhu.dynamic.jpa.support;
 
 import com.joutvhu.dynamic.commons.util.ApplicationContextHolder;
+import jakarta.persistence.EntityManager;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,6 @@ import org.springframework.data.querydsl.SimpleEntityPathResolver;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
 import org.springframework.lang.Nullable;
-
-import javax.persistence.EntityManager;
 
 /**
  * Special adapter for Springs {@link DynamicJpaRepositoryFactoryBean} interface to allow easy setup of
