@@ -1,8 +1,7 @@
 package com.joutvhu.dynamic.jpa.query;
 
 import com.joutvhu.dynamic.commons.DynamicQueryTemplate;
-import com.joutvhu.dynamic.commons.DynamicQueryTemplateProcessor;
-import com.joutvhu.dynamic.commons.util.ApplicationContextHolder;
+import com.joutvhu.dynamic.jpa.DynamicQuery;
 import org.springframework.data.jpa.repository.query.*;
 import org.springframework.data.repository.query.*;
 import org.springframework.data.util.Lazy;
@@ -50,15 +49,12 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
     protected String buildQuery(DynamicQueryTemplate template, JpaParametersParameterAccessor accessor) {
         try {
             if (template != null) {
-                DynamicQueryTemplateProcessor processor = ApplicationContextHolder.getBean(DynamicQueryTemplateProcessor.class);
                 Map<String, Object> model = DynamicJpaParameterAccessor.of(accessor).getParamModel();
-                String queryString = processor.processTemplate(template, model)
+                String queryString = template.process(model)
                         .replaceAll("\n", " ")
                         .replaceAll("\t", " ")
                         .replaceAll(" +", " ")
-                        .replaceAll("::", " \\\\:\\\\: ") // postgres cast escaping for hibernate column::text
                         .trim();
-
                 return queryString.isEmpty() ? null : queryString;
             }
         } catch (Exception e) {

@@ -31,6 +31,7 @@ public class DynamicJpaQueryMethod extends JpaQueryMethod {
     private final Method method;
     private final Lazy<Boolean> isNativeQuery;
 
+    private DynamicQueryTemplateProvider queryTemplateProvider;
     private DynamicQueryTemplate queryTemplate;
     private DynamicQueryTemplate countQueryTemplate;
     private DynamicQueryTemplate countProjectionTemplate;
@@ -56,6 +57,12 @@ public class DynamicJpaQueryMethod extends JpaQueryMethod {
                 .of(() -> getMergedOrDefaultAnnotationValue("nativeQuery", DynamicQuery.class, Boolean.class));
     }
 
+    private DynamicQueryTemplateProvider getTemplateProvider() {
+        if (queryTemplateProvider == null)
+            queryTemplateProvider = ApplicationContextHolder.getBean(DynamicQueryTemplateProvider.class);
+        return queryTemplateProvider;
+    }
+
     protected DynamicQueryTemplate findTemplate(String name) {
         DynamicQueryTemplateProvider provider = getTemplateProvider();
         return provider != null ? provider.findTemplate(name) : null;
@@ -63,9 +70,8 @@ public class DynamicJpaQueryMethod extends JpaQueryMethod {
 
     protected DynamicQueryTemplate createTemplate(String name, String query) {
         DynamicQueryTemplateProvider provider = getTemplateProvider();
-        return provider.createTemplate(name, query);
+        return provider != null ? provider.createTemplate(name, query) : null;
     }
-
 
     protected DynamicQueryTemplate getTemplate(String name) {
         String templateName = templateMap.get(name);
@@ -99,11 +105,6 @@ public class DynamicJpaQueryMethod extends JpaQueryMethod {
         if (countProjectionTemplate == null)
             countProjectionTemplate = getTemplate("countProjection");
         return countProjectionTemplate;
-    }
-
-
-    private DynamicQueryTemplateProvider getTemplateProvider() {
-        return ApplicationContextHolder.getBean(DynamicQueryTemplateProvider.class);
     }
 
     private String getEntityName() {
