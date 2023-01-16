@@ -33,7 +33,6 @@ ext {
             'spring-framework.version'      : '5.0.4.RELEASE',
             'spring-dynamic-commons.version': '2.0.0',
             'hibernate.version'             : '5.2.14.Final',
-            'freemarker.version'            : '2.3.31',
             'commons-lang3.version'         : '3.12.0'
     ]
     managedVersions = [
@@ -45,7 +44,6 @@ ext {
             'org.springframework.data:spring-data-jpa'    : 'spring-boot.version',
             'com.github.joutvhu:spring-dynamic-commons'   : 'spring-dynamic-commons.version',
             'org.hibernate:hibernate-core'                : 'hibernate.version',
-            'org.freemarker:freemarker'                   : 'freemarker.version',
             'org.apache.commons:commons-lang3'            : 'commons-lang3.version'
     ]
     otherVersions = [
@@ -88,6 +86,7 @@ dependencies {
         exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
     }
     testImplementation 'com.h2database:h2'
+    testImplementation 'org.freemarker:freemarker:2.3.31'
     testImplementation 'com.github.joutvhu:spring-dynamic-freemarker:1.0.0'
 
     testCompileOnly 'org.projectlombok:lombok:1.18.24'
