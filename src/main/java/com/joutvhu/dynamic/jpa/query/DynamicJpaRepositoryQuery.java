@@ -2,11 +2,24 @@ package com.joutvhu.dynamic.jpa.query;
 
 import com.joutvhu.dynamic.commons.DynamicQueryTemplate;
 import com.joutvhu.dynamic.jpa.DynamicQuery;
-import org.springframework.data.jpa.repository.query.*;
-import org.springframework.data.repository.query.*;
+import org.springframework.data.jpa.repository.query.AbstractJpaQuery;
+import org.springframework.data.jpa.repository.query.DynamicBasedStringQuery;
+import org.springframework.data.jpa.repository.query.DynamicJpaParameterAccessor;
+import org.springframework.data.jpa.repository.query.DynamicParameterBinderFactory;
+import org.springframework.data.jpa.repository.query.DynamicQueryMetadataCache;
+import org.springframework.data.jpa.repository.query.InvalidJpaQueryMethodException;
+import org.springframework.data.jpa.repository.query.JpaParametersParameterAccessor;
+import org.springframework.data.jpa.repository.query.ParameterBinder;
+import org.springframework.data.jpa.repository.query.QueryUtils;
+import org.springframework.data.repository.query.Parameters;
+import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
+import org.springframework.data.repository.query.RepositoryQuery;
+import org.springframework.data.repository.query.ResultProcessor;
+import org.springframework.data.repository.query.ReturnedType;
 import org.springframework.data.util.Lazy;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.lang.Nullable;
+import org.springframework.util.Assert;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -41,6 +54,8 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
     public DynamicJpaRepositoryQuery(DynamicJpaQueryMethod method, EntityManager em,
                                      QueryMethodEvaluationContextProvider evaluationContextProvider) {
         super(method, em);
+
+        Assert.notNull(evaluationContextProvider, "ExpressionEvaluationContextProvider must not be null");
 
         this.method = method;
         this.evaluationContextProvider = evaluationContextProvider;
