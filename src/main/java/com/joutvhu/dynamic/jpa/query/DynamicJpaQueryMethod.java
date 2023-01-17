@@ -1,9 +1,9 @@
 package com.joutvhu.dynamic.jpa.query;
 
-import com.joutvhu.dynamic.jpa.DynamicQuery;
 import com.joutvhu.dynamic.commons.DynamicQueryTemplate;
 import com.joutvhu.dynamic.commons.DynamicQueryTemplateProvider;
 import com.joutvhu.dynamic.commons.util.ApplicationContextHolder;
+import com.joutvhu.dynamic.jpa.DynamicQuery;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.jpa.provider.QueryExtractor;
