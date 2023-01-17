@@ -4,7 +4,9 @@ import com.joutvhu.dynamic.jpa.query.DynamicJpaQueryLookupStrategy;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.jpa.provider.PersistenceProvider;
 import org.springframework.data.jpa.provider.QueryExtractor;
+import org.springframework.data.jpa.repository.query.DefaultJpaQueryMethodFactory;
 import org.springframework.data.jpa.repository.query.EscapeCharacter;
+import org.springframework.data.jpa.repository.query.JpaQueryMethodFactory;
 import org.springframework.data.jpa.repository.query.QueryRewriterProvider;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 import org.springframework.data.repository.query.QueryLookupStrategy;
@@ -22,6 +24,7 @@ public class DynamicJpaRepositoryFactory extends JpaRepositoryFactory {
     private final EntityManager entityManager;
     private final QueryExtractor extractor;
     private EscapeCharacter escapeCharacter = EscapeCharacter.DEFAULT;
+    private JpaQueryMethodFactory queryMethodFactory;
     private QueryRewriterProvider queryRewriterProvider;
 
     /**
@@ -33,13 +36,20 @@ public class DynamicJpaRepositoryFactory extends JpaRepositoryFactory {
         super(entityManager);
         this.entityManager = entityManager;
         this.extractor = PersistenceProvider.fromEntityManager(entityManager);
+        this.queryMethodFactory = new DefaultJpaQueryMethodFactory(extractor);
         this.queryRewriterProvider = QueryRewriterProvider.simple();
+        super.setQueryMethodFactory(queryMethodFactory);
     }
 
     @Override
     public void setEscapeCharacter(EscapeCharacter escapeCharacter) {
         super.setEscapeCharacter(escapeCharacter);
         this.escapeCharacter = escapeCharacter;
+    }
+
+    public void setQueryMethodFactory(JpaQueryMethodFactory queryMethodFactory) {
+        super.setQueryMethodFactory(queryMethodFactory);
+        this.queryMethodFactory = queryMethodFactory;
     }
 
     @Override
@@ -49,8 +59,10 @@ public class DynamicJpaRepositoryFactory extends JpaRepositoryFactory {
     }
 
     @Override
-    protected Optional<QueryLookupStrategy> getQueryLookupStrategy(QueryLookupStrategy.Key key, QueryMethodEvaluationContextProvider evaluationContextProvider) {
+    protected Optional<QueryLookupStrategy> getQueryLookupStrategy(
+            QueryLookupStrategy.Key key, QueryMethodEvaluationContextProvider evaluationContextProvider) {
         return Optional.of(DynamicJpaQueryLookupStrategy
-                .create(entityManager, key, extractor, evaluationContextProvider, queryRewriterProvider, escapeCharacter));
+                .create(entityManager, queryMethodFactory, key, extractor, evaluationContextProvider,
+                        queryRewriterProvider, escapeCharacter));
     }
 }
