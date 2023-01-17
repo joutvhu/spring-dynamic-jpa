@@ -1,7 +1,9 @@
 package com.joutvhu.dynamic.jpa;
 
-import com.joutvhu.dynamic.commons.DynamicQueryTemplates;
+import com.joutvhu.dynamic.commons.DynamicQueryTemplateProvider;
+import com.joutvhu.dynamic.freemarker.FreemarkerQueryTemplateProvider;
 import com.joutvhu.dynamic.jpa.support.DynamicJpaRepositoryFactoryBean;
+import jakarta.persistence.EntityManagerFactory;
 import org.hibernate.cfg.AvailableSettings;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
@@ -19,7 +21,6 @@ import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
@@ -82,8 +83,8 @@ public class JpaDynamicApplication {
     }
 
     @Bean
-    public DynamicQueryTemplates dynamicQueryTemplates() {
-        DynamicQueryTemplates queryTemplates = new DynamicQueryTemplates();
+    public DynamicQueryTemplateProvider dynamicQueryTemplates() {
+        DynamicQueryTemplateProvider queryTemplates = new FreemarkerQueryTemplateProvider();
         queryTemplates.setSuffix(".dsql");
         return queryTemplates;
     }

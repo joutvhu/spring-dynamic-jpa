@@ -1,17 +1,32 @@
 package com.joutvhu.dynamic.jpa.query;
 
+import com.joutvhu.dynamic.commons.DynamicQueryTemplate;
 import com.joutvhu.dynamic.jpa.DynamicQuery;
-import freemarker.template.Template;
-import org.springframework.data.jpa.repository.query.*;
-import org.springframework.data.repository.query.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
+import jakarta.persistence.Tuple;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.QueryRewriter;
+import org.springframework.data.jpa.repository.query.AbstractJpaQuery;
+import org.springframework.data.jpa.repository.query.DynamicBasedStringQuery;
+import org.springframework.data.jpa.repository.query.DynamicJpaParameterAccessor;
+import org.springframework.data.jpa.repository.query.DynamicParameterBinderFactory;
+import org.springframework.data.jpa.repository.query.DynamicQueryMetadataCache;
+import org.springframework.data.jpa.repository.query.InvalidJpaQueryMethodException;
+import org.springframework.data.jpa.repository.query.JpaParametersParameterAccessor;
+import org.springframework.data.jpa.repository.query.ParameterBinder;
+import org.springframework.data.jpa.repository.query.QueryEnhancerFactory;
+import org.springframework.data.repository.query.Parameters;
+import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
+import org.springframework.data.repository.query.RepositoryQuery;
+import org.springframework.data.repository.query.ResultProcessor;
+import org.springframework.data.repository.query.ReturnedType;
 import org.springframework.data.util.Lazy;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.lang.Nullable;
-import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+import org.springframework.util.Assert;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.persistence.Tuple;
 import java.util.Map;
 
 /**
@@ -26,6 +41,7 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
     private final DynamicJpaQueryMethod method;
     private final QueryMethodEvaluationContextProvider evaluationContextProvider;
     private final DynamicQueryMetadataCache metadataCache = new DynamicQueryMetadataCache();
+    private final QueryRewriter queryRewriter;
 
     private JpaParametersParameterAccessor accessor;
     private DynamicBasedStringQuery query;
@@ -40,19 +56,23 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
      * @param evaluationContextProvider QueryMethodEvaluationContextProvider
      */
     public DynamicJpaRepositoryQuery(DynamicJpaQueryMethod method, EntityManager em,
+                                     QueryRewriter queryRewriter,
                                      QueryMethodEvaluationContextProvider evaluationContextProvider) {
         super(method, em);
 
+        Assert.notNull(evaluationContextProvider, "ExpressionEvaluationContextProvider must not be null");
+        Assert.notNull(queryRewriter, "QueryRewriter must not be null");
+
         this.method = method;
+        this.queryRewriter = queryRewriter;
         this.evaluationContextProvider = evaluationContextProvider;
     }
 
-    protected String buildQuery(Template template, JpaParametersParameterAccessor accessor) {
+    protected String buildQuery(DynamicQueryTemplate template, JpaParametersParameterAccessor accessor) {
         try {
             if (template != null) {
                 Map<String, Object> model = DynamicJpaParameterAccessor.of(accessor).getParamModel();
-                String queryString = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
-                queryString = queryString
+                String queryString = template.process(model)
                         .replaceAll("\n", " ")
                         .replaceAll("\t", " ")
                         .replaceAll(" +", " ")
@@ -87,11 +107,12 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
     protected Query doCreateQuery(JpaParametersParameterAccessor accessor) {
         setAccessor(accessor);
 
-        String sortedQueryString = QueryUtils
-                .applySorting(query.getQueryString(), accessor.getSort(), query.getAlias());
+        String sortedQueryString = QueryEnhancerFactory.forQuery(query)
+                .applySorting(accessor.getSort(), query.getAlias());
         ResultProcessor processor = getQueryMethod().getResultProcessor().withDynamicProjection(accessor);
 
-        Query query = createJpaQuery(sortedQueryString, processor.getReturnedType());
+        Query query = createJpaQuery(sortedQueryString, accessor.getSort(), accessor.getPageable(),
+                processor.getReturnedType());
 
         return metadataCache.bindAndPrepare(sortedQueryString, query, accessor, parameterBinder);
     }
@@ -129,8 +150,9 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
      * @param returnedType of method
      * @return a {@link Query}
      */
-    protected Query createJpaQuery(String queryString, ReturnedType returnedType) {
+    protected Query createJpaQuery(String queryString, Sort sort, @Nullable Pageable pageable, ReturnedType returnedType) {
         EntityManager em = getEntityManager();
+        queryString = potentiallyRewriteQuery(queryString, sort, pageable);
         if (method.isNativeQuery()) {
             Class<?> type = getTypeToQueryFor(returnedType);
             return type == null ? em.createNativeQuery(queryString) : em.createNativeQuery(queryString, type);
@@ -181,5 +203,15 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
                 validatingEm.close();
             }
         }
+    }
+
+    /**
+     * Use the {@link QueryRewriter}, potentially rewrite the query, using relevant {@link Sort} and {@link Pageable}
+     * information.
+     */
+    protected String potentiallyRewriteQuery(String originalQuery, Sort sort, @Nullable Pageable pageable) {
+        return pageable != null && pageable.isPaged() ?
+                queryRewriter.rewrite(originalQuery, pageable) :
+                queryRewriter.rewrite(originalQuery, sort);
     }
 }

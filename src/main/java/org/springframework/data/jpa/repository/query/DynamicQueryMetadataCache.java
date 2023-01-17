@@ -1,8 +1,7 @@
 package org.springframework.data.jpa.repository.query;
 
+import jakarta.persistence.Query;
 import org.springframework.data.util.Lazy;
-
-import javax.persistence.Query;
 
 /**
  * Cache for {@link DynamicQueryMetadataCache}. Optimizes for small cache sizes on a best-effort basis.

@@ -1,8 +1,13 @@
 package com.joutvhu.dynamic.jpa;
 
 import org.springframework.data.annotation.QueryAnnotation;
+import org.springframework.data.jpa.repository.QueryRewriter;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Annotation to declare finder dynamic queries directly on repository methods.
@@ -43,4 +48,11 @@ public @interface DynamicQuery {
      * @return true if the query is native
      */
     boolean nativeQuery() default false;
+
+    /**
+     * Define a {@link QueryRewriter} that should be applied to the query string after the query is fully assembled.
+     *
+     * @since 3.0
+     */
+    Class<? extends QueryRewriter> queryRewriter() default QueryRewriter.IdentityQueryRewriter.class;
 }
