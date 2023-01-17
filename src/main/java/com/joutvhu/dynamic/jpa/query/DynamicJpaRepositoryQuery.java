@@ -13,6 +13,7 @@ import org.springframework.data.repository.query.*;
 import org.springframework.data.util.Lazy;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.lang.Nullable;
+import org.springframework.util.Assert;
 
 import java.util.Map;
 
@@ -46,6 +47,9 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
                                      QueryRewriter queryRewriter,
                                      QueryMethodEvaluationContextProvider evaluationContextProvider) {
         super(method, em);
+
+        Assert.notNull(evaluationContextProvider, "ExpressionEvaluationContextProvider must not be null");
+        Assert.notNull(queryRewriter, "QueryRewriter must not be null");
 
         this.method = method;
         this.queryRewriter = queryRewriter;
@@ -91,8 +95,8 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
     protected Query doCreateQuery(JpaParametersParameterAccessor accessor) {
         setAccessor(accessor);
 
-        String sortedQueryString = QueryUtils
-                .applySorting(query.getQueryString(), accessor.getSort(), query.getAlias());
+        String sortedQueryString = QueryEnhancerFactory.forQuery(query)
+                .applySorting(accessor.getSort(), query.getAlias());
         ResultProcessor processor = getQueryMethod().getResultProcessor().withDynamicProjection(accessor);
 
         Query query = createJpaQuery(sortedQueryString, accessor.getSort(), accessor.getPageable(),
