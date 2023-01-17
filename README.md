@@ -4,31 +4,67 @@ The Spring Dynamic JPA will make it easy to implement dynamic queries with JpaRe
 
 ## How to use?
 
-- Add dependency
+### Install dependency
 
 ```groovy
-implementation 'com.github.joutvhu:spring-dynamic-jpa:2.7.5'
+implementation 'com.github.joutvhu:spring-dynamic-jpa:3.0.6'
 ```
 
 ```xml
 <dependency>
     <groupId>com.github.joutvhu</groupId>
     <artifactId>spring-dynamic-jpa</artifactId>
-    <version>2.7.5</version>
+    <version>3.0.6</version>
 </dependency>
 ```
 
-- Please choose the _spring-dynamic-jpa_ version appropriate with your spring version.
+- Please choose the _Spring Dynamic JPA_ version appropriate with your spring version.
 
-| spring-boot version | spring-dynamic-jpa version |
-|:----------:|:-------------:|
-| 2.0.x.RELEASE | 2.0.5 |
-| 2.1.x.RELEASE | 2.1.5 |
-| 2.2.x.RELEASE | 2.2.5 |
-| 2.3.x.RELEASE | 2.3.5 |
-| 2.7.x | 2.7.5 |
+  | Spring Boot version | Spring Dynamic JPA version |
+  |:----------:|:-------------:|
+  | 2.0.x.RELEASE | 2.0.6 |
+  | 2.1.x.RELEASE | 2.1.6 |
+  | 2.2.x.RELEASE | 2.2.6 |
+  | 2.3.x.RELEASE | 2.3.6 |
+  | 2.4.x | 2.3.6 |
+  | 2.5.x | 2.3.6 |
+  | 2.6.x | 2.3.6 |
+  | 2.7.x | 2.7.6 |
+  | 3.0.x | 3.0.6 |
 
-- To use the dynamic query, you need to set the jpa repository's `repositoryFactoryBeanClass` property to `DynamicJpaRepositoryFactoryBean.class`.
+Also, you have to choose a [Dynamic Query Template Provider](https://github.com/joutvhu/spring-dynamic-commons#dynamic-query-template-provider) to use,
+the Dynamic Query Template Provider will decide the style you write dynamic query template.
+
+In this document, I will use [Spring Dynamic Freemarker](https://github.com/joutvhu/spring-dynamic-freemarker).
+If you migrated from a lower version, you should use it.
+
+```groovy
+implementation 'com.github.joutvhu:spring-dynamic-freemarker:1.0.0'
+```
+
+```xml
+<dependency>
+    <groupId>com.github.joutvhu</groupId>
+    <artifactId>spring-dynamic-freemarker</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+
+### Configuration
+
+- First you need to create a bean of `DynamicQueryTemplateProvider`, that depending on which the Dynamic Query Template Provider you are using.
+
+```java
+@Bean
+public DynamicQueryTemplateProvider dynamicQueryTemplateProvider() {
+    FreemarkerQueryTemplateProvider provider = new FreemarkerQueryTemplateProvider();
+    provider.setTemplateLocation("classpath:/query");
+    provider.setSuffix(".dsql");
+    return provider;
+}
+```
+
+- Next, you need to set the jpa repository's `repositoryFactoryBeanClass` property to `DynamicJpaRepositoryFactoryBean.class`.
 
 ```java
 // Config with annotation
@@ -84,19 +120,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 ### Load query template files
 
-- You need to configure a `DynamicQueryTemplates` bean to be loadable external query templates.
+- If you do not specify the query template on the `@DynamicQuery` annotation.
+  The `DynamicQueryTemplateProvider` will find them from external template files based on the `TemplateLocation` and `Suffix` that you specify in the provider.
 
-```java
-@Bean
-public DynamicQueryTemplates dynamicQueryTemplates() {
-    DynamicQueryTemplates queryTemplates = new DynamicQueryTemplates();
-    queryTemplates.setTemplateLocation("classpath:/query");
-    queryTemplates.setSuffix(".dsql");
-    return queryTemplates;
-}
-```
-
-- From version 2.x.5 `DynamicQueryTemplates` has been moved to package [spring-dynamic-commons](https://github.com/joutvhu/spring-dynamic-commons). Change the package to `com.joutvhu.dynamic.commons.DynamicQueryTemplates`, If you upgrade from old version.
+- If you don't want to load the template from external template files you can use the following code `provider.setSuffix(null);`.
 
 - Each template will start with a template name definition line. The template name definition line must be start with two dash characters (`--`). The template name will have the following syntax.
   
@@ -108,7 +135,7 @@ public DynamicQueryTemplates dynamicQueryTemplates() {
   
   - `methodName` is query method name
   
-  - `queryType`  corresponds to what query type of `@DynamicQuery` annotaion
+  - `queryType`  corresponds to what query type of `@DynamicQuery` annotation.
     
   | queryType | DynamicQuery field |
   |:----------:|:-------------:|
@@ -150,7 +177,7 @@ select t from User t
 </#if>
 ```
 
-- If you don't specify the query template inside the `@DynamicQuery` annotation, `DynamicJpaRepositoryQuery` will find it from the external query files.
+- Now you don't need to specify the query template on `@DynamicQuery` annotation.
 
 ```java
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -172,56 +199,3 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByGroup(Group group);
 }
 ```
-
-## How to write query template
-
-- This library using [Apache FreeMarker](https://freemarker.apache.org) template engine to write query template. You can refer to [Freemarker Document](https://freemarker.apache.org/docs/index.html) to know more about rules.
-
-- Use [Online FreeMarker Template Tester](https://try.freemarker.apache.org) with `tagSyntax = angleBracket` and `interpolationSyntax = dollar` to test your query template.
-
-- From version 2.x.2, we will have three directives are `<@where>`, `<@set>`, `<@trim>`
-
-  - `@where` directive knows to only insert `WHERE` if there is any content returned by the containing tags. Furthermore, if that content begins or ends with `AND` or `OR`, it knows to strip it off.
-
-  ```sql
-  select t from User t
-  <@where>
-    <#if firstName?has_content>
-      and t.firstName = :firstName
-    </#if>
-    <#if lastName?has_content>
-      and t.lastName = :lastName
-    </#if>
-  </@where>
-  ```
-
-  - `@set` directive is like the `@where` directive, it removes the commas if it appears at the begins or ends of the content. Also, it will insert `SET` if the content is not empty.
-
-  ```sql
-  update User t
-  <@set>
-    <#if firstName?has_content>
-      t.firstName = :firstName,
-    </#if>
-    <#if lastName?has_content>
-      t.lastName = :lastName,
-    </#if>
-  </@set>
-  where t.userId = :userId
-  ```
-
-  - `@trim` directive has four parameters: `prefix`, `prefixOverrides`, `suffix`, `suffixOverrides`.
-    
-    - `prefix` is the string value that will be inserted at the start of the content if it is not empty.
-    
-    - `prefixOverrides` are values that will be removed if they are at the start of a content.
-    
-    - `suffix` is the string value that will be inserted at the end of the content if it is not empty.
-    
-    - `suffixOverrides` are values that will be removed if they are at the end of a content.
-    
-  ```sql
-  <@trim prefix="where (" prefixOverrides=["and ", "or "] suffix=")" suffixOverrides=[" and", " or"]>
-  ...
-  </@trim>
-  ```
