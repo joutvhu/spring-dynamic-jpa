@@ -10,7 +10,7 @@ plugins {
 }
 
 group = 'com.github.joutvhu'
-version = '2.1.6'
+version = '2.1.7'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -32,8 +32,7 @@ ext {
             'spring-boot.version'           : '2.1.0.RELEASE',
             'spring-framework.version'      : '5.1.2.RELEASE',
             'spring-dynamic-commons.version': '2.0.0',
-            'hibernate.version'             : '5.3.7.Final',
-            'commons-lang3.version'         : '3.12.0'
+            'hibernate.version'             : '5.3.7.Final'
     ]
     managedVersions = [
             'org.springframework:spring-aspects'          : 'spring-framework.version',
@@ -43,8 +42,7 @@ ext {
             'org.springframework.data:spring-data-commons': 'spring-boot.version',
             'org.springframework.data:spring-data-jpa'    : 'spring-boot.version',
             'com.github.joutvhu:spring-dynamic-commons'   : 'spring-dynamic-commons.version',
-            'org.hibernate:hibernate-core'                : 'hibernate.version',
-            'org.apache.commons:commons-lang3'            : 'commons-lang3.version'
+            'org.hibernate:hibernate-core'                : 'hibernate.version'
     ]
     otherVersions = [
             'org.springframework.boot:spring-boot-dependencies': 'spring-boot.version'
@@ -71,8 +69,8 @@ dependencies {
 
     implementation 'org.hibernate:hibernate-core'
 
-    compileOnly 'org.projectlombok:lombok:1.18.24'
-    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    compileOnly 'org.projectlombok:lombok:1.18.26'
+    annotationProcessor 'org.projectlombok:lombok:1.18.26'
 
     testImplementation(platform('org.junit:junit-bom:5.8.2'))
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
@@ -88,8 +86,8 @@ dependencies {
     testImplementation 'com.h2database:h2'
     testImplementation 'com.github.joutvhu:spring-dynamic-freemarker:1.0.0'
 
-    testCompileOnly 'org.projectlombok:lombok:1.18.24'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+    testCompileOnly 'org.projectlombok:lombok:1.18.26'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
 }
 
 jar {
