@@ -7,14 +7,14 @@ The Spring Dynamic JPA will make it easy to implement dynamic queries with JpaRe
 ### Install dependency
 
 ```groovy
-implementation 'com.github.joutvhu:spring-dynamic-jpa:3.0.6'
+implementation 'com.github.joutvhu:spring-dynamic-jpa:3.0.7'
 ```
 
 ```xml
 <dependency>
     <groupId>com.github.joutvhu</groupId>
     <artifactId>spring-dynamic-jpa</artifactId>
-    <version>3.0.6</version>
+    <version>3.0.7</version>
 </dependency>
 ```
 
@@ -22,15 +22,15 @@ implementation 'com.github.joutvhu:spring-dynamic-jpa:3.0.6'
 
   | Spring Boot version | Spring Dynamic JPA version |
   |:----------:|:-------------:|
-  | 2.0.x.RELEASE | 2.0.6 |
-  | 2.1.x.RELEASE | 2.1.6 |
-  | 2.2.x.RELEASE | 2.2.6 |
-  | 2.3.x.RELEASE | 2.3.6 |
-  | 2.4.x | 2.3.6 |
-  | 2.5.x | 2.3.6 |
-  | 2.6.x | 2.3.6 |
-  | 2.7.x | 2.7.6 |
-  | 3.0.x | 3.0.6 |
+  | 2.0.x.RELEASE | 2.0.7 |
+  | 2.1.x.RELEASE | 2.1.7 |
+  | 2.2.x.RELEASE | 2.2.7 |
+  | 2.3.x.RELEASE | 2.3.7 |
+  | 2.4.x | 2.3.7 |
+  | 2.5.x | 2.3.7 |
+  | 2.6.x | 2.3.7 |
+  | 2.7.x | 2.7.7 |
+  | 3.0.x | 3.0.7 |
 
 Also, you have to choose a [Dynamic Query Template Provider](https://github.com/joutvhu/spring-dynamic-commons#dynamic-query-template-provider) to use,
 the Dynamic Query Template Provider will decide the style you write dynamic query template.
