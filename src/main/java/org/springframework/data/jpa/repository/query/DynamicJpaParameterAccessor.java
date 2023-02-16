@@ -1,8 +1,8 @@
 package org.springframework.data.jpa.repository.query;
 
-import org.hibernate.jpa.TypedParameterValue;
 import org.springframework.data.repository.query.Parameters;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,13 +71,26 @@ public class DynamicJpaParameterAccessor extends JpaParametersParameterAccessor 
             Object value = accessor.getValue(parameter);
             if (value != null && parameter.isBindable()) {
                 String key = parameter.getName().orElse(String.valueOf(parameter.getIndex()));
-                if (value instanceof TypedParameterValue) {
-                    result.put(key, ((TypedParameterValue) value).getValue());
-                } else {
-                    result.put(key, value);
-                }
+                result.put(key, getParameterValue(value));
             }
         });
         return result;
+    }
+
+    @SuppressWarnings("java:S1872")
+    private Object getParameterValue(Object value) {
+        Class<?> valueClass = value.getClass();
+        String className = valueClass.getName();
+        if ("org.hibernate.query.TypedParameterValue".equals(className) ||
+                "org.hibernate.jpa.TypedParameterValue".equals(className)) {
+            try {
+                Method getValue = valueClass.getMethod("getValue");
+                return getValue.invoke(value);
+            } catch (Exception e) {
+                return value;
+            }
+        } else {
+            return value;
+        }
     }
 }
