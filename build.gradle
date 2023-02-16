@@ -10,7 +10,7 @@ plugins {
 }
 
 group = 'com.github.joutvhu'
-version = '3.0.6'
+version = '3.0.7'
 
 def snapshotVersion = version.endsWith('-SNAPSHOT') || version.endsWith('.SNAPSHOT')
 
