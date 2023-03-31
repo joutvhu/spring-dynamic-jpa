@@ -7,14 +7,14 @@ The Spring Dynamic JPA will make it easy to implement dynamic queries with JpaRe
 ### Install dependency
 
 ```groovy
-implementation 'com.github.joutvhu:spring-dynamic-jpa:3.0.7'
+implementation 'com.github.joutvhu:spring-dynamic-jpa:3.0.8'
 ```
 
 ```xml
 <dependency>
     <groupId>com.github.joutvhu</groupId>
     <artifactId>spring-dynamic-jpa</artifactId>
-    <version>3.0.7</version>
+    <version>3.0.8</version>
 </dependency>
 ```
 
@@ -22,15 +22,15 @@ implementation 'com.github.joutvhu:spring-dynamic-jpa:3.0.7'
 
   | Spring Boot version | Spring Dynamic JPA version |
   |:----------:|:-------------:|
-  | 2.0.x.RELEASE | 2.0.7 |
-  | 2.1.x.RELEASE | 2.1.7 |
-  | 2.2.x.RELEASE | 2.2.7 |
-  | 2.3.x.RELEASE | 2.3.7 |
-  | 2.4.x | 2.3.7 |
-  | 2.5.x | 2.3.7 |
-  | 2.6.x | 2.3.7 |
-  | 2.7.x | 2.7.7 |
-  | 3.0.x | 3.0.7 |
+  | 2.0.x.RELEASE | 2.0.8 |
+  | 2.1.x.RELEASE | 2.1.8 |
+  | 2.2.x.RELEASE | 2.2.8 |
+  | 2.3.x.RELEASE | 2.3.8 |
+  | 2.4.x | 2.3.8 |
+  | 2.5.x | 2.3.8 |
+  | 2.6.x | 2.3.8 |
+  | 2.7.x | 2.7.8 |
+  | 3.0.x | 3.0.8 |
 
 Also, you have to choose a [Dynamic Query Template Provider](https://github.com/joutvhu/spring-dynamic-commons#dynamic-query-template-provider) to use,
 the Dynamic Query Template Provider will decide the style you write dynamic query template.
@@ -126,17 +126,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
 - If you don't want to load the template from external template files you can use the following code `provider.setSuffix(null);`.
 
 - Each template will start with a template name definition line. The template name definition line must be start with two dash characters (`--`). The template name will have the following syntax.
-  
+
   ```
-  entityName:methodName[.queryType]
+  queryMethodName[.queryType]
   ```
 
-  - `entityName` is entity class name
-  
-  - `methodName` is query method name
-  
+  - `queryMethodName` can be provided through field `@DynamicQuery.name`. If `@DynamicQuery.name` is not provided, `queryMethodName` will be `entityName:methodName` where `entityName` is entity class name, `methodName` is query method name
+
   - `queryType`  corresponds to what query type of `@DynamicQuery` annotation.
-    
+
   | queryType | DynamicQuery field |
   |:----------:|:-------------:|
   | empty |  DynamicQuery.value |
@@ -175,6 +173,17 @@ select t from User t
 <#if group.name?starts_with("Git")>
   where t.groupId = :#{#group.id}
 </#if>
+
+-- get_user_by_username_and_email
+select t from User t
+<@where>
+  <#if username??>
+    and t.username = :username
+  </#if>
+  <#if email??>
+    and t.email = :email
+  </#if>
+</@where>
 ```
 
 - Now you don't need to specify the query template on `@DynamicQuery` annotation.
@@ -197,5 +206,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @DynamicQuery
     List<User> findByGroup(Group group);
+
+    @DynamicQuery(name = "get_user_by_username_and_email")
+    List<User> getUserWithUsernameAndEmail(String username, String email);
 }
 ```

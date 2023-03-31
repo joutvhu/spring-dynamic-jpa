@@ -77,10 +77,11 @@ public class DynamicJpaQueryMethod extends JpaQueryMethod {
     protected DynamicQueryTemplate getTemplate(String name) {
         String templateName = templateMap.get(name);
         if (StringUtils.hasText(templateName)) templateName = "." + templateName;
-        templateName = getTemplateKey() + templateName;
+        String templateMethodName = getMergedOrDefaultAnnotationValue("name", DynamicQuery.class, String.class);
+        if (!StringUtils.hasText(templateMethodName)) templateMethodName = getTemplateKey();
+        templateName = templateMethodName + templateName;
         String query = getMergedOrDefaultAnnotationValue(name, DynamicQuery.class, String.class);
-        queryTemplate = StringUtils.hasText(query) ? createTemplate(templateName, query) : findTemplate(templateName);
-        return queryTemplate;
+        return StringUtils.hasText(query) ? createTemplate(templateName, query) : findTemplate(templateName);
     }
 
     public boolean isNativeQuery() {
