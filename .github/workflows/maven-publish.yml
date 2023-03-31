@@ -40,7 +40,7 @@ jobs:
           write_mode: overwrite
 
       - name: Build with Gradle
-        run: gradle clean build
+        run: ./gradlew clean build
 
       - name: Get Current Release
         id: get_current_release
@@ -49,8 +49,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish to Sonatype Packages
-        run: gradle publishMavenPublicationToSonatypeRepository
+        run: ./gradlew publishMavenPublicationToSonatypeRepository
 
       - name: Publish to GitHub Packages
         if: ${{ steps.get_current_release.outputs.prerelease == 'false' && steps.get_current_release.outputs.draft == 'false' }}
-        run: gradle publishMavenPublicationToGithubRepository
+        run: ./gradlew publishMavenPublicationToGithubRepository
