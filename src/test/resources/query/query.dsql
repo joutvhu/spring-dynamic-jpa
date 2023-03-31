@@ -27,3 +27,9 @@ select sum(FIELD_D) from TABLE_B
 <#if maxD??>
   where FIELD_D < :maxD
 </#if>
+
+-- findTableBByFieldD
+select t from TableB t
+<#if fieldD??>
+  where t.fieldD = :fieldD
+</#if>
