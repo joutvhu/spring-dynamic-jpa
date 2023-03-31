@@ -24,6 +24,7 @@ public @interface DynamicQuery {
      * Provides a query template method name, which is used to find external query templates.
      * The default is {@code entityName:methodName}, entityName is entity class name, methodName is query method name.
      *
+     * @return the query template method name
      * @since x.x.8
      */
     String name() default "";
@@ -60,6 +61,7 @@ public @interface DynamicQuery {
     /**
      * Define a {@link QueryRewriter} that should be applied to the query string after the query is fully assembled.
      *
+     * @return a {@link QueryRewriter}
      * @since 3.0
      */
     Class<? extends QueryRewriter> queryRewriter() default QueryRewriter.IdentityQueryRewriter.class;
