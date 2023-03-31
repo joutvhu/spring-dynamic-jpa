@@ -20,6 +20,15 @@ import java.lang.annotation.Target;
 @Documented
 public @interface DynamicQuery {
     /**
+     * Provides a query template method name, which is used to find external query templates.
+     * The default is {@code entityName:methodName}, entityName is entity class name, methodName is query method name.
+     *
+     * @return the query template method name
+     * @since x.x.8
+     */
+    String name() default "";
+
+    /**
      * Defines the JPA query template to be executed when the annotated method is called.
      *
      * @return the JPA query template
