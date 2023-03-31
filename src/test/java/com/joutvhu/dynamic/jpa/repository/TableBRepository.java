@@ -27,4 +27,7 @@ public interface TableBRepository extends JpaRepository<TableB, Long> {
             "  where t.fieldE = :#{#modelC.fieldC}\n" +
             "</#if>")
     List<TableB> findB4(ModelC modelC);
+
+    @DynamicQuery(name = "findTableBByFieldD")
+    List<TableB> findB5(Long fieldD);
 }

@@ -10,7 +10,8 @@ plugins {
 }
 
 group = 'com.github.joutvhu'
-version = '2.7.7'
+version = '2.7.8'
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -46,6 +47,9 @@ ext {
     ]
     otherVersions = [
             'org.springframework.boot:spring-boot-dependencies': 'spring-boot.version'
+    ]
+    optionalDependencies = [
+            'org.hibernate:hibernate-core'
     ]
 }
 
@@ -120,12 +124,12 @@ task fatJar(type: Jar) {
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
+    archiveClassifier = 'sources'
     from sourceSets.main.allSource
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
+    archiveClassifier = 'javadoc'
     from javadoc.destinationDir
 }
 
@@ -178,27 +182,40 @@ publishing {
                     name = 'Giao Ho'
                     url = 'https://github.com/joutvhu'
                 }
-                properties = project.ext.versions
+                properties = project.ext.versions instanceof Map ? project.ext.versions : new HashMap<>()
                 withXml {
-                    def dependencyManagement = asNode().get('dependencyManagement')
-                    dependencyManagement.dependencies.dependency.each {
-                        def key = "${it.groupId.text()}:${it.artifactId.text()}"
-                        def versionProperty = project.ext.managedVersions[key]
-                        if (versionProperty == null) {
-                            versionProperty = project.ext.otherVersions[key]
-                        }
-                        if (versionProperty) {
-                            it.version[0].setValue("\${$versionProperty}")
+                    def pomNode = asNode();
+                    def dependencyManagement = pomNode.get('dependencyManagement')
+                    if (dependencyManagement.dependencies.dependency.isEmpty()) {
+                        pomNode.remove(dependencyManagement)
+                    } else {
+                        dependencyManagement.dependencies.dependency.each {
+                            def key = "${it.groupId.text()}:${it.artifactId.text()}"
+                            def versionProperty = project.ext.managedVersions[key]
+                            if (versionProperty == null) {
+                                versionProperty = project.ext.otherVersions[key]
+                            }
+                            if (versionProperty) {
+                                it.version[0].setValue("\${$versionProperty}")
+                            }
                         }
                     }
 
-                    def dependenciesNode = asNode().appendNode('dependencies')
-                    configurations.implementation.allDependencies.each {
-                        def dependencyNode = dependenciesNode.appendNode('dependency')
-                        dependencyNode.appendNode('groupId', it.group)
-                        dependencyNode.appendNode('artifactId', it.name)
-                        if (it.version != null) {
-                            dependencyNode.appendNode('version', it.version)
+                    def dependenciesNode = pomNode.appendNode('dependencies')
+                    if (configurations.implementation.allDependencies.isEmpty()) {
+                        pomNode.remove(dependenciesNode)
+                    } else {
+                        configurations.implementation.allDependencies.each {
+                            def dependencyNode = dependenciesNode.appendNode('dependency')
+                            dependencyNode.appendNode('groupId', it.group)
+                            dependencyNode.appendNode('artifactId', it.name)
+                            if (it.version != null) {
+                                dependencyNode.appendNode('version', it.version)
+                            }
+                            def key = "${it.group}:${it.name}"
+                            if (project.ext.optionalDependencies.any { el -> el.contains(key) }) {
+                                dependencyNode.appendNode('optional', true)
+                            }
                         }
                     }
                 }
