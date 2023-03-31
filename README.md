@@ -126,17 +126,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
 - If you don't want to load the template from external template files you can use the following code `provider.setSuffix(null);`.
 
 - Each template will start with a template name definition line. The template name definition line must be start with two dash characters (`--`). The template name will have the following syntax.
-  
+
   ```
-  entityName:methodName[.queryType]
+  queryMethodName[.queryType]
   ```
 
-  - `entityName` is entity class name
-  
-  - `methodName` is query method name
-  
+  - `queryMethodName` can be provided through field `@DynamicQuery.name`. If `@DynamicQuery.name` is not provided, `queryMethodName` will be `entityName:methodName` where `entityName` is entity class name, `methodName` is query method name
+
   - `queryType`  corresponds to what query type of `@DynamicQuery` annotation.
-    
+
   | queryType | DynamicQuery field |
   |:----------:|:-------------:|
   | empty |  DynamicQuery.value |
@@ -175,6 +173,17 @@ select t from User t
 <#if group.name?starts_with("Git")>
   where t.groupId = :#{#group.id}
 </#if>
+
+-- get_user_by_username_and_email
+select t from User t
+<@where>
+  <#if username??>
+    and t.username = :username
+  </#if>
+  <#if email??>
+    and t.email = :email
+  </#if>
+</@where>
 ```
 
 - Now you don't need to specify the query template on `@DynamicQuery` annotation.
@@ -197,5 +206,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @DynamicQuery
     List<User> findByGroup(Group group);
+
+    @DynamicQuery(name = "get_user_by_username_and_email")
+    List<User> getUserWithUsernameAndEmail(String username, String email);
 }
 ```
