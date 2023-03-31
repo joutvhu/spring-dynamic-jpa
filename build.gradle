@@ -45,6 +45,9 @@ ext {
     otherVersions = [
             'org.springframework.boot:spring-boot-dependencies': 'spring-boot.version'
     ]
+    optionalDependencies = [
+            'org.hibernate.orm:hibernate-core'
+    ]
 }
 
 dependencyManagement {
@@ -205,6 +208,10 @@ publishing {
                             dependencyNode.appendNode('artifactId', it.name)
                             if (it.version != null) {
                                 dependencyNode.appendNode('version', it.version)
+                            }
+                            def key = "${it.group}:${it.name}"
+                            if (project.ext.optionalDependencies.any { el -> el.contains(key) }) {
+                                dependencyNode.appendNode('optional', true)
                             }
                         }
                     }
