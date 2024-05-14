@@ -7,30 +7,32 @@ The Spring Dynamic JPA will make it easy to implement dynamic queries with JpaRe
 ### Install dependency
 
 ```groovy
-implementation 'com.github.joutvhu:spring-dynamic-jpa:3.0.8'
+implementation 'com.github.joutvhu:spring-dynamic-jpa:3.1.8'
 ```
 
 ```xml
 <dependency>
     <groupId>com.github.joutvhu</groupId>
     <artifactId>spring-dynamic-jpa</artifactId>
-    <version>3.0.8</version>
+    <version>3.1.8</version>
 </dependency>
 ```
 
 - Please choose the _Spring Dynamic JPA_ version appropriate with your spring version.
 
   | Spring Boot version | Spring Dynamic JPA version |
-  |:----------:|:-------------:|
-  | 2.0.x.RELEASE | 2.0.8 |
-  | 2.1.x.RELEASE | 2.1.8 |
-  | 2.2.x.RELEASE | 2.2.8 |
-  | 2.3.x.RELEASE | 2.3.8 |
-  | 2.4.x | 2.3.8 |
-  | 2.5.x | 2.3.8 |
-  | 2.6.x | 2.3.8 |
-  | 2.7.x | 2.7.8 |
-  | 3.0.x | 3.0.8 |
+  |:-------------------:|:--------------------------:|
+  |    2.0.x.RELEASE    |           2.0.8            |
+  |    2.1.x.RELEASE    |           2.1.8            |
+  |    2.2.x.RELEASE    |           2.2.8            |
+  |    2.3.x.RELEASE    |           2.3.8            |
+  |        2.4.x        |           2.3.8            |
+  |        2.5.x        |           2.3.8            |
+  |        2.6.x        |           2.3.8            |
+  |        2.7.x        |           2.7.8            |
+  |        3.0.x        |           3.0.8            |
+  |        3.1.x        |           3.1.8            |
+  |        3.2.x        |           3.1.8            |
 
 Also, you have to choose a [Dynamic Query Template Provider](https://github.com/joutvhu/spring-dynamic-commons#dynamic-query-template-provider) to use,
 the Dynamic Query Template Provider will decide the style you write dynamic query template.
@@ -39,14 +41,14 @@ In this document, I will use [Spring Dynamic Freemarker](https://github.com/jout
 If you migrated from a lower version, you should use it.
 
 ```groovy
-implementation 'com.github.joutvhu:spring-dynamic-freemarker:1.0.0'
+implementation 'com.github.joutvhu:spring-dynamic-freemarker:1.0.1'
 ```
 
 ```xml
 <dependency>
     <groupId>com.github.joutvhu</groupId>
     <artifactId>spring-dynamic-freemarker</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 

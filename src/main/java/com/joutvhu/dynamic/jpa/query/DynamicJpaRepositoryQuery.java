@@ -125,7 +125,7 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
         String countProjectionString = buildQuery(method.getCountProjectionTemplate(), accessor);
 
         countQuery = new DynamicBasedStringQuery(
-                query.deriveCountQuery(countQueryString, countProjectionString),
+                query.deriveCountQueryString(countQueryString, countProjectionString),
                 method.getEntityInformation(), PARSER, method.isNativeQuery());
 
         if (!method.isNativeQuery() && method.isPageQuery())

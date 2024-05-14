@@ -5,12 +5,12 @@ plugins {
     id 'signing'
     id 'java-library'
     id 'maven-publish'
-    id 'org.springframework.boot' version '3.0.0'
-    id 'io.spring.dependency-management' version '1.1.0'
+    id 'org.springframework.boot' version '3.1.0'
+    id 'io.spring.dependency-management' version '1.1.5'
 }
 
 group = 'com.github.joutvhu'
-version = '3.0.8'
+version = '3.1.8'
 
 def snapshotVersion = version.endsWith('-SNAPSHOT') || version.endsWith('.SNAPSHOT')
 
@@ -27,20 +27,11 @@ repositories {
 
 ext {
     versions = [
-            'spring-boot.version'           : '3.0.0',
-            'spring-framework.version'      : '6.0.2',
-            'spring-dynamic-commons.version': '2.0.0',
-            'hibernate.version'             : '6.1.5.Final'
+            'spring-boot.version'           : '3.1.0',
+            'spring-dynamic-commons.version': '2.0.0'
     ]
     managedVersions = [
-            'org.springframework:spring-aspects'          : 'spring-framework.version',
-            'org.springframework:spring-context'          : 'spring-framework.version',
-            'org.springframework:spring-jcl'              : 'spring-framework.version',
-            'org.springframework:spring-context-support'  : 'spring-framework.version',
-            'org.springframework.data:spring-data-commons': 'spring-boot.version',
-            'org.springframework.data:spring-data-jpa'    : 'spring-boot.version',
-            'com.github.joutvhu:spring-dynamic-commons'   : 'spring-dynamic-commons.version',
-            'org.hibernate.orm:hibernate-core'            : 'hibernate.version'
+            'com.github.joutvhu:spring-dynamic-commons'   : 'spring-dynamic-commons.version'
     ]
     otherVersions = [
             'org.springframework.boot:spring-boot-dependencies': 'spring-boot.version'
@@ -70,8 +61,8 @@ dependencies {
 
     implementation 'org.hibernate.orm:hibernate-core'
 
-    compileOnly 'org.projectlombok:lombok:1.18.26'
-    annotationProcessor 'org.projectlombok:lombok:1.18.26'
+    compileOnly 'org.projectlombok:lombok:1.18.32'
+    annotationProcessor 'org.projectlombok:lombok:1.18.32'
 
     testImplementation(platform('org.junit:junit-bom:5.8.2'))
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
@@ -85,10 +76,10 @@ dependencies {
         exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
     }
     testImplementation 'com.h2database:h2'
-    testImplementation 'com.github.joutvhu:spring-dynamic-freemarker:1.0.0'
+    testImplementation 'com.github.joutvhu:spring-dynamic-freemarker:1.0.1'
 
-    testCompileOnly 'org.projectlombok:lombok:1.18.26'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
+    testCompileOnly 'org.projectlombok:lombok:1.18.32'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.32'
 }
 
 jar {
