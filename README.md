@@ -34,9 +34,9 @@ implementation 'com.github.joutvhu:spring-dynamic-jpa:3.1.8'
   |        3.1.x        |           3.1.8            | main |
   |        3.2.x        |           3.1.8            | main |
   |        3.3.x        |           3.3.8            | support/spring-boot-3.3.x |
-  |        3.4.x        |           3.4.8 (WIP)      | support/spring-boot-3.4.x |
+  |        3.4.x        |           3.4.8            | support/spring-boot-3.4.x |
 
-> **Note**: Spring Boot 3.3.x support is fully tested and working. Spring Boot 3.4.x support is work-in-progress - compilation successful but runtime integration requires further investigation.
+> **Note**: Both Spring Boot 3.3.x and 3.4.x are fully tested and working. All 20 integration tests pass on both versions.
 
 Also, you have to choose a [Dynamic Query Template Provider](https://github.com/joutvhu/spring-dynamic-commons#dynamic-query-template-provider) to use,
 the Dynamic Query Template Provider will decide the style you write dynamic query template.
