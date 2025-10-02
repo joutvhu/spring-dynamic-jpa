@@ -13,6 +13,7 @@ import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.query.QueryLookupStrategy;
 import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
 import org.springframework.data.repository.query.RepositoryQuery;
+import org.springframework.data.repository.query.ValueExpressionDelegate;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
@@ -35,8 +36,12 @@ public class DynamicJpaQueryLookupStrategy implements QueryLookupStrategy {
                                          @Nullable Key key, QueryExtractor extractor,
                                          QueryMethodEvaluationContextProvider evaluationContextProvider,
                                          QueryRewriterProvider queryRewriterProvider, EscapeCharacter escape) {
+        // Create ValueExpressionDelegate for Spring Data JPA 3.4 API
+        ValueExpressionDelegate delegate = ValueExpressionDelegate.create();
+        
+        // Use the new API with ValueExpressionDelegate
         this.jpaQueryLookupStrategy = JpaQueryLookupStrategy.create(entityManager, queryMethodFactory, key,
-                evaluationContextProvider, queryRewriterProvider, escape);
+                delegate, queryRewriterProvider, escape);
         this.extractor = extractor;
         this.entityManager = entityManager;
         this.evaluationContextProvider = evaluationContextProvider;

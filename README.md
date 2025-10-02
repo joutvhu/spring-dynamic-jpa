@@ -20,21 +20,21 @@ implementation 'com.github.joutvhu:spring-dynamic-jpa:3.1.8'
 
 - Please choose the _Spring Dynamic JPA_ version appropriate with your spring version.
 
-  | Spring Boot version | Spring Dynamic JPA version | Branch |
-  |:-------------------:|:--------------------------:|:------:|
-  |    2.0.x.RELEASE    |           2.0.8            | main |
-  |    2.1.x.RELEASE    |           2.1.8            | main |
-  |    2.2.x.RELEASE    |           2.2.8            | main |
-  |    2.3.x.RELEASE    |           2.3.8            | main |
-  |        2.4.x        |           2.3.8            | main |
-  |        2.5.x        |           2.3.8            | main |
-  |        2.6.x        |           2.3.8            | main |
-  |        2.7.x        |           2.7.8            | main |
-  |        3.0.x        |           3.0.8            | main |
-  |        3.1.x        |           3.1.8            | main |
-  |        3.2.x        |           3.1.8            | main |
-  |        3.3.x        |           3.3.8            | support/spring-boot-3.3.x |
-  |        3.4.x        |           3.4.8            | support/spring-boot-3.4.x |
+  | Spring Boot version | Spring Dynamic JPA version |
+  |:-------------------:|:--------------------------:|
+  |    2.0.x.RELEASE    |           2.0.8            |
+  |    2.1.x.RELEASE    |           2.1.8            |
+  |    2.2.x.RELEASE    |           2.2.8            |
+  |    2.3.x.RELEASE    |           2.3.8            |
+  |        2.4.x        |           2.3.8            |
+  |        2.5.x        |           2.3.8            |
+  |        2.6.x        |           2.3.8            |
+  |        2.7.x        |           2.7.8            |
+  |        3.0.x        |           3.0.8            |
+  |        3.1.x        |           3.1.8            |
+  |        3.2.x        |           3.1.8            |
+  |        3.3.x        |           3.3.8            |
+  |        3.4.x        |           3.4.8            |
 
 > **Note**: Both Spring Boot 3.3.x and 3.4.x are fully tested and working. All 20 integration tests pass on both versions.
 
