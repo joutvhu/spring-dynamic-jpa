@@ -1,5 +1,6 @@
 package org.springframework.data.jpa.repository.query;
 
+import org.springframework.data.expression.ValueExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
@@ -22,7 +23,7 @@ public class DynamicBasedStringQuery extends ExpressionBasedStringQuery {
      * @param nativeQuery must not be {@literal null}.
      */
     public DynamicBasedStringQuery(String query, JpaEntityMetadata<?> metadata, SpelExpressionParser parser, boolean nativeQuery) {
-        super(query, metadata, parser, nativeQuery);
+        super(query, metadata, ValueExpressionParser.create(), nativeQuery);
         this.queryEnhancer = QueryEnhancerFactory.forQuery(this);
     }
 

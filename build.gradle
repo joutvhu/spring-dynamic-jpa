@@ -5,12 +5,12 @@ plugins {
     id 'signing'
     id 'java-library'
     id 'maven-publish'
-    id 'org.springframework.boot' version '3.1.0'
-    id 'io.spring.dependency-management' version '1.1.5'
+    id 'org.springframework.boot' version '3.4.0'
+    id 'io.spring.dependency-management' version '1.1.6'
 }
 
 group = 'com.github.joutvhu'
-version = '3.1.8'
+version = '3.4.8'
 
 def snapshotVersion = version.endsWith('-SNAPSHOT') || version.endsWith('.SNAPSHOT')
 
@@ -27,7 +27,7 @@ repositories {
 
 ext {
     versions = [
-            'spring-boot.version'           : '3.1.0',
+            'spring-boot.version'           : '3.4.0',
             'spring-dynamic-commons.version': '2.0.0'
     ]
     managedVersions = [
@@ -219,16 +219,16 @@ publishing {
                 url = 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
             }
             credentials {
-                username = project.ossrhUsername
-                password = project.ossrhPassword
+                username = project.findProperty('ossrhUsername') ?: ''
+                password = project.findProperty('ossrhPassword') ?: ''
             }
         }
         maven {
             name = 'github'
             url = "https://maven.pkg.github.com/joutvhu/spring-dynamic-jpa"
             credentials {
-                username = project.githubUsername
-                password = project.githubPassword
+                username = project.findProperty('githubUsername') ?: ''
+                password = project.findProperty('githubPassword') ?: ''
             }
         }
     }
