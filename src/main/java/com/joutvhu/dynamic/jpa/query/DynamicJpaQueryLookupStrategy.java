@@ -32,6 +32,17 @@ public class DynamicJpaQueryLookupStrategy implements QueryLookupStrategy {
     private QueryMethodEvaluationContextProvider evaluationContextProvider;
     private QueryRewriterProvider queryRewriterProvider;
 
+    /**
+     * Constructs a DynamicJpaQueryLookupStrategy for dynamic query handling.
+     *
+     * @param entityManager the JPA EntityManager
+     * @param queryMethodFactory the query method factory
+     * @param key the query lookup key (may be null)
+     * @param extractor the query extractor
+     * @param evaluationContextProvider the evaluation context provider
+     * @param queryRewriterProvider the query rewriter provider
+     * @param escape the escape character
+     */
     public DynamicJpaQueryLookupStrategy(EntityManager entityManager, JpaQueryMethodFactory queryMethodFactory,
                                          @Nullable Key key, QueryExtractor extractor,
                                          QueryMethodEvaluationContextProvider evaluationContextProvider,
@@ -62,6 +73,18 @@ public class DynamicJpaQueryLookupStrategy implements QueryLookupStrategy {
         return annotation != null;
     }
 
+    /**
+     * Creates a new instance of DynamicJpaQueryLookupStrategy.
+     *
+     * @param entityManager the JPA EntityManager
+     * @param queryMethodFactory the query method factory
+     * @param key the query lookup key (may be null)
+     * @param extractor the query extractor
+     * @param evaluationContextProvider the evaluation context provider
+     * @param queryRewriterProvider the query rewriter provider
+     * @param escape the escape character
+     * @return a new QueryLookupStrategy
+     */
     public static QueryLookupStrategy create(EntityManager entityManager, JpaQueryMethodFactory queryMethodFactory,
                                              @Nullable Key key, QueryExtractor extractor,
                                              QueryMethodEvaluationContextProvider evaluationContextProvider,

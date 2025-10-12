@@ -28,6 +28,11 @@ public class DynamicJpaParameterAccessor extends JpaParametersParameterAccessor 
         this.values = values;
     }
 
+    /**
+     * Constructs a DynamicJpaParameterAccessor from a JpaParametersParameterAccessor.
+     *
+     * @param accessor the JpaParametersParameterAccessor to wrap
+     */
     public DynamicJpaParameterAccessor(JpaParametersParameterAccessor accessor) {
         super(accessor.getParameters(), accessor.getParameters().stream()
                 .map(accessor::getValue).toArray());
@@ -36,10 +41,23 @@ public class DynamicJpaParameterAccessor extends JpaParametersParameterAccessor 
         this.accessor = accessor;
     }
 
+    /**
+     * Creates a DynamicJpaParameterAccessor from parameters and values.
+     *
+     * @param parameters the parameters
+     * @param values the parameter values
+     * @return a new DynamicJpaParameterAccessor
+     */
     public static DynamicJpaParameterAccessor of(Parameters<?, ?> parameters, Object[] values) {
         return new DynamicJpaParameterAccessor(parameters, values);
     }
 
+    /**
+     * Creates a DynamicJpaParameterAccessor from an existing JpaParametersParameterAccessor.
+     *
+     * @param accessor the JpaParametersParameterAccessor
+     * @return a new DynamicJpaParameterAccessor
+     */
     public static DynamicJpaParameterAccessor of(JpaParametersParameterAccessor accessor) {
         return new DynamicJpaParameterAccessor(accessor);
     }

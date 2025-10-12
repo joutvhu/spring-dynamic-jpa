@@ -1,0 +1,6 @@
+build/
+
+secrets/
+
+.gradle/
+gradle.properties

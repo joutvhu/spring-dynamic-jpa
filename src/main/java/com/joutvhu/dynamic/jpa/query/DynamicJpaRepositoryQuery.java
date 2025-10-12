@@ -53,6 +53,7 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
      *
      * @param method                    DynamicJpaQueryMethod
      * @param em                        EntityManager
+     * @param queryRewriter             QueryRewriter instance
      * @param evaluationContextProvider QueryMethodEvaluationContextProvider
      */
     public DynamicJpaRepositoryQuery(DynamicJpaQueryMethod method, EntityManager em,
@@ -68,6 +69,13 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
         this.evaluationContextProvider = evaluationContextProvider;
     }
 
+    /**
+     * Builds a query string from the given template and parameter accessor.
+     *
+     * @param template the dynamic query template
+     * @param accessor the parameter accessor
+     * @return the built query string, or null if template is invalid
+     */
     protected String buildQuery(DynamicQueryTemplate template, JpaParametersParameterAccessor accessor) {
         try {
             if (template != null) {
@@ -91,6 +99,12 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
                 evaluationContextProvider);
     }
 
+    /**
+     * Sets the current parameter accessor and prepares the query.
+     *
+     * @param accessor the parameter accessor
+     * @return the prepared DynamicBasedStringQuery
+     */
     protected DynamicBasedStringQuery setAccessor(JpaParametersParameterAccessor accessor) {
         if (query == null || this.accessor != accessor) {
             this.accessor = accessor;
@@ -143,12 +157,13 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
     }
 
     /**
-     * Creates an appropriate JPA query from an {@link EntityManager} according to the current {@link DynamicJpaRepositoryQuery}
-     * type.
+     * Creates an appropriate JPA query from an EntityManager according to the current DynamicJpaRepositoryQuery type.
      *
-     * @param queryString  is query
-     * @param returnedType of method
-     * @return a {@link Query}
+     * @param queryString the query string
+     * @param sort the sort specification
+     * @param pageable the pageable specification (may be null)
+     * @param returnedType the returned type
+     * @return a JPA Query
      */
     protected Query createJpaQuery(String queryString, Sort sort, @Nullable Pageable pageable, ReturnedType returnedType) {
         EntityManager em = getEntityManager();
@@ -206,8 +221,12 @@ public class DynamicJpaRepositoryQuery extends AbstractJpaQuery {
     }
 
     /**
-     * Use the {@link QueryRewriter}, potentially rewrite the query, using relevant {@link Sort} and {@link Pageable}
-     * information.
+     * Potentially rewrites the query using the QueryRewriter, Sort, and Pageable information.
+     *
+     * @param originalQuery the original query string
+     * @param sort the sort specification
+     * @param pageable the pageable specification (may be null)
+     * @return the rewritten query string
      */
     protected String potentiallyRewriteQuery(String originalQuery, Sort sort, @Nullable Pageable pageable) {
         return pageable != null && pageable.isPaged() ?

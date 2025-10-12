@@ -19,6 +19,15 @@ public class DynamicParameterBinderFactory extends ParameterBinderFactory {
     // Standard environment for expression evaluation
     private static final StandardEnvironment ENVIRONMENT = new StandardEnvironment();
     
+    /**
+     * Creates a query-aware ParameterBinder for dynamic queries.
+     *
+     * @param parameters the JPA parameters
+     * @param query the declared query
+     * @param parser the SpEL expression parser
+     * @param evaluationContextProvider the evaluation context provider
+     * @return a ParameterBinder instance
+     */
     public static ParameterBinder createQueryAwareBinder(
             JpaParameters parameters, DeclaredQuery query, SpelExpressionParser parser,
             QueryMethodEvaluationContextProvider evaluationContextProvider) {
