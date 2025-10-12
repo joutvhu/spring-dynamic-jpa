@@ -33,6 +33,8 @@ implementation 'com.github.joutvhu:spring-dynamic-jpa:3.1.8'
   |        3.0.x        |           3.0.8            |
   |        3.1.x        |           3.1.8            |
   |        3.2.x        |           3.1.8            |
+  |        3.3.x        |           3.1.8            |
+  |        3.4.x        |           3.4.8            |
 
 Also, you have to choose a [Dynamic Query Template Provider](https://github.com/joutvhu/spring-dynamic-commons#dynamic-query-template-provider) to use,
 the Dynamic Query Template Provider will decide the style you write dynamic query template.

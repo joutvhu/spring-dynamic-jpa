@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.query.QueryRewriterProvider;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 import org.springframework.data.repository.query.QueryLookupStrategy;
 import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
+import org.springframework.data.repository.query.ValueExpressionDelegate;
 
 import java.util.Optional;
 
@@ -58,9 +59,23 @@ public class DynamicJpaRepositoryFactory extends JpaRepositoryFactory {
         this.queryRewriterProvider = queryRewriterProvider;
     }
 
+    // Override the old API for backward compatibility
     @Override
     protected Optional<QueryLookupStrategy> getQueryLookupStrategy(
             QueryLookupStrategy.Key key, QueryMethodEvaluationContextProvider evaluationContextProvider) {
+        return Optional.of(DynamicJpaQueryLookupStrategy
+                .create(entityManager, queryMethodFactory, key, extractor, evaluationContextProvider,
+                        queryRewriterProvider, escapeCharacter));
+    }
+    
+    // Override the NEW Spring Data 3.4 API that uses ValueExpressionDelegate
+    @Override
+    protected Optional<QueryLookupStrategy> getQueryLookupStrategy(
+            QueryLookupStrategy.Key key, ValueExpressionDelegate delegate) {
+        // Use the default QueryMethodEvaluationContextProvider
+        // The delegate will handle expression evaluation internally
+        QueryMethodEvaluationContextProvider evaluationContextProvider = QueryMethodEvaluationContextProvider.DEFAULT;
+        
         return Optional.of(DynamicJpaQueryLookupStrategy
                 .create(entityManager, queryMethodFactory, key, extractor, evaluationContextProvider,
                         queryRewriterProvider, escapeCharacter));

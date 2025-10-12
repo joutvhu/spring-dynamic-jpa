@@ -13,6 +13,7 @@ import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.query.QueryLookupStrategy;
 import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
 import org.springframework.data.repository.query.RepositoryQuery;
+import org.springframework.data.repository.query.ValueExpressionDelegate;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
@@ -31,12 +32,27 @@ public class DynamicJpaQueryLookupStrategy implements QueryLookupStrategy {
     private QueryMethodEvaluationContextProvider evaluationContextProvider;
     private QueryRewriterProvider queryRewriterProvider;
 
+    /**
+     * Constructs a DynamicJpaQueryLookupStrategy for dynamic query handling.
+     *
+     * @param entityManager the JPA EntityManager
+     * @param queryMethodFactory the query method factory
+     * @param key the query lookup key (may be null)
+     * @param extractor the query extractor
+     * @param evaluationContextProvider the evaluation context provider
+     * @param queryRewriterProvider the query rewriter provider
+     * @param escape the escape character
+     */
     public DynamicJpaQueryLookupStrategy(EntityManager entityManager, JpaQueryMethodFactory queryMethodFactory,
                                          @Nullable Key key, QueryExtractor extractor,
                                          QueryMethodEvaluationContextProvider evaluationContextProvider,
                                          QueryRewriterProvider queryRewriterProvider, EscapeCharacter escape) {
+        // Create ValueExpressionDelegate for Spring Data JPA 3.4 API
+        ValueExpressionDelegate delegate = ValueExpressionDelegate.create();
+        
+        // Use the new API with ValueExpressionDelegate
         this.jpaQueryLookupStrategy = JpaQueryLookupStrategy.create(entityManager, queryMethodFactory, key,
-                evaluationContextProvider, queryRewriterProvider, escape);
+                delegate, queryRewriterProvider, escape);
         this.extractor = extractor;
         this.entityManager = entityManager;
         this.evaluationContextProvider = evaluationContextProvider;
@@ -57,6 +73,18 @@ public class DynamicJpaQueryLookupStrategy implements QueryLookupStrategy {
         return annotation != null;
     }
 
+    /**
+     * Creates a new instance of DynamicJpaQueryLookupStrategy.
+     *
+     * @param entityManager the JPA EntityManager
+     * @param queryMethodFactory the query method factory
+     * @param key the query lookup key (may be null)
+     * @param extractor the query extractor
+     * @param evaluationContextProvider the evaluation context provider
+     * @param queryRewriterProvider the query rewriter provider
+     * @param escape the escape character
+     * @return a new QueryLookupStrategy
+     */
     public static QueryLookupStrategy create(EntityManager entityManager, JpaQueryMethodFactory queryMethodFactory,
                                              @Nullable Key key, QueryExtractor extractor,
                                              QueryMethodEvaluationContextProvider evaluationContextProvider,

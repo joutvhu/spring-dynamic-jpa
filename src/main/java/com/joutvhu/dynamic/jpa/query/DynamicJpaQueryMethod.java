@@ -64,16 +64,35 @@ public class DynamicJpaQueryMethod extends JpaQueryMethod {
         return queryTemplateProvider;
     }
 
+    /**
+     * Finds a dynamic query template by name.
+     *
+     * @param name the template name
+     * @return the found DynamicQueryTemplate, or null if not found
+     */
     protected DynamicQueryTemplate findTemplate(String name) {
         DynamicQueryTemplateProvider provider = getTemplateProvider();
         return provider != null ? provider.findTemplate(name) : null;
     }
 
+    /**
+     * Creates a dynamic query template with the given name and query string.
+     *
+     * @param name the template name
+     * @param query the query string
+     * @return the created DynamicQueryTemplate, or null if provider is not available
+     */
     protected DynamicQueryTemplate createTemplate(String name, String query) {
         DynamicQueryTemplateProvider provider = getTemplateProvider();
         return provider != null ? provider.createTemplate(name, query) : null;
     }
 
+    /**
+     * Gets a dynamic query template by name.
+     *
+     * @param name the template name
+     * @return the DynamicQueryTemplate, or null if not found
+     */
     protected DynamicQueryTemplate getTemplate(String name) {
         String templateName = templateMap.get(name);
         if (StringUtils.hasText(templateName)) templateName = "." + templateName;
@@ -84,10 +103,20 @@ public class DynamicJpaQueryMethod extends JpaQueryMethod {
         return StringUtils.hasText(query) ? createTemplate(templateName, query) : findTemplate(templateName);
     }
 
+    /**
+     * Indicates whether the query is native.
+     *
+     * @return true if native query, false otherwise
+     */
     public boolean isNativeQuery() {
         return this.isNativeQuery.get();
     }
 
+    /**
+     * Gets the main query template for this method.
+     *
+     * @return the DynamicQueryTemplate, or null if not found
+     */
     @Nullable
     public DynamicQueryTemplate getQueryTemplate() {
         if (queryTemplate == null)
@@ -95,6 +124,11 @@ public class DynamicJpaQueryMethod extends JpaQueryMethod {
         return queryTemplate;
     }
 
+    /**
+     * Gets the count query template for this method.
+     *
+     * @return the DynamicQueryTemplate, or null if not found
+     */
     @Nullable
     public DynamicQueryTemplate getCountQueryTemplate() {
         if (countQueryTemplate == null)
@@ -102,6 +136,11 @@ public class DynamicJpaQueryMethod extends JpaQueryMethod {
         return countQueryTemplate;
     }
 
+    /**
+     * Gets the count projection template for this method.
+     *
+     * @return the DynamicQueryTemplate, or null if not found
+     */
     @Nullable
     public DynamicQueryTemplate getCountProjectionTemplate() {
         if (countProjectionTemplate == null)
