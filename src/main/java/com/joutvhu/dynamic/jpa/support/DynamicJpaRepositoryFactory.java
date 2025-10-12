@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.query.EscapeCharacter;
 import org.springframework.data.jpa.repository.query.JpaQueryMethodFactory;
 import org.springframework.data.jpa.repository.query.QueryRewriterProvider;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
-import org.springframework.data.repository.query.ExtensionAwareQueryMethodEvaluationContextProvider;
 import org.springframework.data.repository.query.QueryLookupStrategy;
 import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
 import org.springframework.data.repository.query.ValueExpressionDelegate;
